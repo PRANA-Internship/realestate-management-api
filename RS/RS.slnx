@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
     <File Path="Directory.Packages.props" />
   </Folder>
   <Folder Name="/src/">
@@ -9,7 +10,5 @@
     <Project Path="src/RS.Domain/RS.Domain.csproj" />
     <Project Path="src/RS.Infrastructure/RS.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/RS.UnitTests/RS.UnitTests.csproj" Id="7863b87e-5542-4ce9-b5a4-b9d7384f5d12" />
-  </Folder>
+  <Folder Name="/tests/" />
 </Solution>

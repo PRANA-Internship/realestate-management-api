@@ -1,6 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\.github",
+    "\\.github\\workflows",
+    "\\RS",
+    "\\RS\\tests",
+    "\\RS\\tests\\RS.UnitTests"
   ],
+  "SelectedNode": "\\RS\\tests\\RS.UnitTests\\RS.UnitTests.csproj",
   "PreviewInSolutionExplorer": false
 }
