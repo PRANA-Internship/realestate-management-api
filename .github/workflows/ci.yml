@@ -11,10 +11,6 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: RS
-
     steps:
       - uses: actions/checkout@v4
 
@@ -24,7 +20,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore RS.slnx
 
       - name: Check formatting
         run: dotnet format RS.slnx --verify-no-changes --verbosity diagnostic
