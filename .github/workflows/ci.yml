@@ -1,7 +1,8 @@
 name: CI
+
 on:
   pull_request:
-    branches: [ "*" ]
+    branches: ["*"]
 
 permissions:
   contents: read
@@ -9,22 +10,23 @@ permissions:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 10.0.x
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Restore dependencies
+        run: dotnet restore RS.slnx
 
-    - name: Check formatting
-      run: dotnet format UMS.slnx --verify-no-changes --verbosity diagnostic
+      - name: Check formatting
+        run: dotnet format RS.slnx --verify-no-changes --verbosity diagnostic
 
-    - name: Build
-      run: dotnet build --no-restore
+      - name: Build
+        run: dotnet build RS.slnx --no-restore
 
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - name: Test
+        run: dotnet test RS.slnx --no-build --verbosity normal
