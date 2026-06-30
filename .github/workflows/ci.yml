@@ -27,10 +27,10 @@ jobs:
         run: dotnet restore
 
       - name: Check formatting
-        run: dotnet format RS.sln --verify-no-changes --verbosity diagnostic
+        run: dotnet format RS.slnx --verify-no-changes --verbosity diagnostic
 
       - name: Build
-        run: dotnet build RS.sln --no-restore
+        run: dotnet build RS.slnx --no-restore
 
       - name: Test
-        run: dotnet test RS.sln --no-build --verbosity normal
+        run: dotnet test RS.slnx --no-build --verbosity normal
