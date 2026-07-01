@@ -27,9 +27,45 @@ public class GlobalExceptionMiddleware
             // Try to execute the request normally
             await _next(context);
         }
-        catch (Exception ex)
+        catch (OperationCanceledException)
         {
-            // Catch ANY exception that occurs anywhere
+            // Request was aborted/cancelled; do not treat as an application error.
+            _logger.LogInformation("Request was canceled. TraceId: {TraceId}", context.TraceIdentifier);
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (ArgumentNullException ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (ArgumentException ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (DbUpdateException ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (FluentValidation.ValidationException ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (InvalidOperationException ex)
+        {
+            await HandleExceptionAsync(context, ex);
+        }
+        catch (SystemException ex)
+        {
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -37,7 +73,7 @@ public class GlobalExceptionMiddleware
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         // Log the exception
-        _logger.LogError(exception, " Unhandled exception: {Message}", exception.Message);
+        _logger.LogError(exception, "Unhandled exception: {Message}", exception.Message);
 
         // Set response details
         context.Response.ContentType = "application/json";
@@ -51,6 +87,8 @@ public class GlobalExceptionMiddleware
             DbUpdateConcurrencyException => (int)HttpStatusCode.Conflict,
             DbUpdateException => (int)HttpStatusCode.InternalServerError,
             FluentValidation.ValidationException => (int)HttpStatusCode.BadRequest,
+            InvalidOperationException => (int)HttpStatusCode.InternalServerError,
+            SystemException => (int)HttpStatusCode.InternalServerError,
             _ => (int)HttpStatusCode.InternalServerError
         };
 
