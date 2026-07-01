@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RS.Application.Common.Interfaces;
+using RS.Infrastructure.Email;
 
 namespace RS.Infrastructure.Services
 {
@@ -70,8 +71,15 @@ namespace RS.Infrastructure.Services
         public async Task SendWelcomeEmailAsync(string toEmail, string fullName, CancellationToken ct = default)
         {
             var subject = "Welcome to the RealEstate System";
-            var body = $"<h1>Welcome {fullName}!</h1><p>Thank you for registering.</p>";
-            await SendEmailAsync(toEmail, subject, body, ct);
+            var body = EmailTemplate.WelcomeEmail(
+            fullName,
+            "https://localhost:5001/login");
+
+            await SendEmailAsync(
+                toEmail,
+                "Welcome to RealEstate System",
+                body,
+                ct);
         }
     }
 }
