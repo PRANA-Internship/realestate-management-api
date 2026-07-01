@@ -1,12 +1,12 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using RS.Application.Common.Interfaces;
-using RS.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using RS.Application.Common.Interfaces;
+using RS.Domain.Entities;
 
 namespace RS.Infrastructure.Services
 {

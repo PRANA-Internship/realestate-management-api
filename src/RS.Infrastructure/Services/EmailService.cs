@@ -1,10 +1,10 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using RS.Application.Common.Interfaces;
 using System.Net;
 using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using RS.Application.Common.Interfaces;
 
 namespace RS.Infrastructure.Services
 {

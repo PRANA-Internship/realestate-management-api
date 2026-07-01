@@ -3,7 +3,7 @@ namespace RS.Domain.Common
     public sealed record Error(string Code, string? Description = null)
     {
         public static readonly Error None = new(string.Empty);
-        
+
         public static class AuthErrors
         {
             public static readonly Error InvalidCredentials = new("AUTH_001", "Invalid email or password.");

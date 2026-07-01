@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,6 @@ using RS.Application.Common.Interfaces;
 using RS.Infrastructure.Persistence;
 using RS.Infrastructure.Persistence.Repositories;
 using RS.Infrastructure.Services;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,9 +1,9 @@
+using System.Threading;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Auth.Commands.Login;
 using RS.Application.Features.Auth.Commands.RegisterBuyer;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace RS.Api.Controllers
 {

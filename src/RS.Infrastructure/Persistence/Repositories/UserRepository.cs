@@ -1,9 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using RS.Application.Common.Interfaces;
-using RS.Domain.Entities;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using RS.Application.Common.Interfaces;
+using RS.Domain.Entities;
 
 namespace RS.Infrastructure.Persistence.Repositories
 {
