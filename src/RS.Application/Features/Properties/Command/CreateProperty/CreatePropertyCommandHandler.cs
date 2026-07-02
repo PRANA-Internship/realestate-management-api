@@ -107,7 +107,7 @@ public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyComman
                 {
                     await _storageService.DeleteImageAsync(imageUrl, ct);
                 }
-                catch (Exception)
+                catch (Exception ex) when (ex is InvalidOperationException or IOException)
                 {
                     // Ignore cleanup errors.
                 }
