@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using RS.Application.Common.Interfaces;
+using RS.Infrastructure.Email;
 
 namespace RS.Infrastructure.Services
 {
     public class EmailService(ILogger<EmailService> logger, IConfiguration configuration) : IEmailService
     {
+
         private async Task SendEmailAsync(string toEmail, string subject, string body, CancellationToken ct)
         {
             var host = configuration["SmtpSettings:Host"];
@@ -67,11 +69,22 @@ namespace RS.Infrastructure.Services
             await SendEmailAsync(toEmail, subject, body, ct);
         }
 
-        public async Task SendWelcomeEmailAsync(string toEmail, string fullName, CancellationToken ct = default)
+        public async Task SendWelcomeEmailAsync(
+      string toEmail,
+      string fullName,
+      CancellationToken ct = default)
         {
-            var subject = "Welcome to the RealEstate System";
-            var body = $"<h1>Welcome {fullName}!</h1><p>Thank you for registering.</p>";
-            await SendEmailAsync(toEmail, subject, body, ct);
+            var loginUrl = $"{configuration["AppSettings:FrontendUrl"]}/login";
+
+            var body = EmailTemplate.WelcomeEmail(
+                fullName,
+                loginUrl);
+
+            await SendEmailAsync(
+                toEmail,
+                "Welcome to RealEstate System",
+                body,
+                ct);
         }
     }
 }
