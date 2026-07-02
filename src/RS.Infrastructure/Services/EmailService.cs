@@ -11,6 +11,7 @@ namespace RS.Infrastructure.Services
 {
     public class EmailService(ILogger<EmailService> logger, IConfiguration configuration) : IEmailService
     {
+
         private async Task SendEmailAsync(string toEmail, string subject, string body, CancellationToken ct)
         {
             var host = configuration["SmtpSettings:Host"];
@@ -68,12 +69,16 @@ namespace RS.Infrastructure.Services
             await SendEmailAsync(toEmail, subject, body, ct);
         }
 
-        public async Task SendWelcomeEmailAsync(string toEmail, string fullName, CancellationToken ct = default)
+        public async Task SendWelcomeEmailAsync(
+      string toEmail,
+      string fullName,
+      CancellationToken ct = default)
         {
-            var subject = "Welcome to the RealEstate System";
+            var loginUrl = $"{configuration["AppSettings:FrontendUrl"]}/login";
+
             var body = EmailTemplate.WelcomeEmail(
-            fullName,
-            "https://localhost:5001/login");
+                fullName,
+                loginUrl);
 
             await SendEmailAsync(
                 toEmail,
