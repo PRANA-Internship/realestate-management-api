@@ -24,6 +24,6 @@
     <ProjectReference Include="..\RS.Application\RS.Application.csproj" />
     <ProjectReference Include="..\RS.Contracts\RS.Contracts.csproj" />
     <ProjectReference Include="..\RS.Infrastructure\RS.Infrastructure.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
-
 </Project>

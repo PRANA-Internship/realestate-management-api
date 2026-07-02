@@ -1,0 +1,34 @@
+[33mfd0b26f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/permissio-crudl[m[33m, [m[1;31morigin/feature/permissio-crudl[m[33m)[m feature/permissio-crudl
+[33m26461ee[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #10 from PRANA-Internship/feature/add-global-exception-handler-with-user-context
+[33m205b295[m feature/permissio-crudl
+[33md3aa74d[m feature/permissio-crudl
+[33ma00a9ae[m Merge branch 'main' into feature/add-global-exception-handler-with-user-context
+[33mcaec1bd[m Merge pull request #7 from PRANA-Internship/feature_email_sending_for_buyer_register
+[33mf8d177a[m feature/ValidationBehaviorAndRefactoredGlobalExceptionMiddleware
+[33m1b4ad8d[m[33m ([m[1;31morigin/feature_email_sending_for_buyer_register[m[33m, [m[1;32mfeature_email_sending_for_buyer_register[m[33m)[m Merge branch 'feature_email_sending_for_buyer_register' of https://github.com/PRANA-Internship/realestate-management-api into feature_email_sending_for_buyer_register
+[33mabac6ed[m Merge branch 'feature_email_sending_for_buyer_register' of https://github.com/PRANA-Internship/realestate-management-api into feature_email_sending_for_buyer_register
+[33mfbd3030[m changs on main
+[33m66d20db[m fix hard coded to frontened URl
+[33m13fdd7d[m[33m ([m[1;31morigin/feature/add-global-exception-handler-with-user-context[m[33m)[m fix: replace generic catch with specific exception handlers
+[33mcc96331[m feat: implement global exception handling and JWT authentication with usercontext
+[33m5b67f8d[m Sync main into feature_email_sending_for_buyer_register
+[33m514eae4[m[33m ([m[1;32mmain[m[33m)[m Merge pull request #9 from PRANA-Internship/feature/fix-sync-location
+[33m7d699a9[m Add GitHub Actions workflow to sync open PRs with the main branch
+[33m5b02701[m Merge pull request #8 from PRANA-Internship/feature/sync-prs-with-main
+[33m15a6338[m Add workflow to sync PRs with main branch
+[33m0585249[m Merge pull request #6 from PRANA-Internship/feature/loginandregisterBuyer
+[33m99c86ff[m Handing welcome email template
+[33m7fb91fc[m[33m ([m[1;31morigin/feature/loginandregisterBuyer[m[33m, [m[1;32mfeature/loginandregisterBuyer[m[33m)[m Apply dotnet format fixes
+[33ma06e124[m Add login and register functionality for buyer
+[33m75e9ba1[m Merge pull request #4 from PRANA-Internship/setup/solution-structure
+[33mf089628[m Add initial project configuration files including .editorconfig, .gitignore, and Directory.Packages.props. Updated CI workflow to reference new solution structure.
+[33m9f26eba[m Fix2:CI workflow
+[33m163be51[m Fix:CI workflow
+[33m540e202[m Initial solution structure
+[33m6e7e18a[m Merge pull request #3 from PRANA-Internship/feature/add-ci
+[33m936c333[m Add CI workflow configuration
+[33m7cf0f42[m Merge pull request #2 from PRANA-Internship/feature/add-codowner
+[33md3f9002[m Add CODEOWNERS file for core team responsibilities
+[33mfd2bb70[m Merge pull request #1 from PRANA-Internship/feature/add-ci-cd
+[33me46fcc3[m Add GitHub Actions workflow for Azure Node.js deployment
+[33m18d6f1e[m Add project title to README
