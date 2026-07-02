@@ -1,6 +1,5 @@
 using System.Net;
 using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
 
 namespace RS.API.Middleware;
 
@@ -24,75 +23,28 @@ public class GlobalExceptionMiddleware
     {
         try
         {
-            // Try to execute the request normally
             await _next(context);
         }
         catch (OperationCanceledException)
         {
-            // Request was aborted/cancelled; do not treat as an application error.
             _logger.LogInformation("Request was canceled. TraceId: {TraceId}", context.TraceIdentifier);
         }
-        catch (UnauthorizedAccessException ex)
+        catch (Exception ex)
         {
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (ArgumentNullException ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (ArgumentException ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (DbUpdateException ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (FluentValidation.ValidationException ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (InvalidOperationException ex)
-        {
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (SystemException ex)
-        {
+            // Catch ALL other exceptions here and let the handler deal with them
             await HandleExceptionAsync(context, ex);
         }
     }
 
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        // Log the exception
         _logger.LogError(exception, "Unhandled exception: {Message}", exception.Message);
 
-        // Set response details
         context.Response.ContentType = "application/json";
 
-        // Map exception to HTTP status code
-        context.Response.StatusCode = exception switch
-        {
-            UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
-            ArgumentException or ArgumentNullException => (int)HttpStatusCode.BadRequest,
-            KeyNotFoundException => (int)HttpStatusCode.NotFound,
-            DbUpdateConcurrencyException => (int)HttpStatusCode.Conflict,
-            DbUpdateException => (int)HttpStatusCode.InternalServerError,
-            FluentValidation.ValidationException => (int)HttpStatusCode.BadRequest,
-            InvalidOperationException => (int)HttpStatusCode.InternalServerError,
-            SystemException => (int)HttpStatusCode.InternalServerError,
-            _ => (int)HttpStatusCode.InternalServerError
-        };
+        // Map exception using Reflection/Type Names to avoid referencing other layers
+        context.Response.StatusCode = GetStatusCode(exception);
 
-        // Build error response
         var errorResponse = new
         {
             StatusCode = context.Response.StatusCode,
@@ -102,7 +54,6 @@ public class GlobalExceptionMiddleware
             Detail = _env.IsDevelopment() ? exception.StackTrace : null,
             Timestamp = DateTime.UtcNow,
             TraceId = context.TraceIdentifier,
-            // Include inner exception details in development
             InnerException = _env.IsDevelopment() ? exception.InnerException?.Message : null
         };
 
@@ -112,5 +63,26 @@ public class GlobalExceptionMiddleware
         });
 
         await context.Response.WriteAsync(jsonResponse);
+    }
+
+    private static int GetStatusCode(Exception exception)
+    {
+        var exceptionType = exception.GetType().Name;
+
+        return exception switch
+        {
+            UnauthorizedAccessException => (int)HttpStatusCode.Unauthorized,
+            ArgumentException or ArgumentNullException => (int)HttpStatusCode.BadRequest,
+            KeyNotFoundException => (int)HttpStatusCode.NotFound,
+            InvalidOperationException => (int)HttpStatusCode.InternalServerError,
+            SystemException => (int)HttpStatusCode.InternalServerError,
+
+            // Handle external layer exceptions by checking their Type Name as strings
+            _ when exceptionType == "DbUpdateConcurrencyException" => (int)HttpStatusCode.Conflict,
+            _ when exceptionType == "DbUpdateException" => (int)HttpStatusCode.InternalServerError,
+            _ when exceptionType == "ValidationException" => (int)HttpStatusCode.BadRequest,
+
+            _ => (int)HttpStatusCode.InternalServerError
+        };
     }
 }

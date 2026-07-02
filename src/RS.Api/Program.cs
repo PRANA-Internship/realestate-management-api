@@ -1,4 +1,5 @@
 using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -7,10 +8,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using RS.API.Middleware;
+
 using RS.Application.Common.Interfaces;
 using RS.Infrastructure.Persistence;
 using RS.Infrastructure.Persistence.Repositories;
 using RS.Infrastructure.Services;
+using UMS.Application.Common.Behaviours;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +27,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<RSDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Configure MediatR
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RS.Application.Features.Auth.Commands.Login.LoginCommand).Assembly));
+// 1. Automatically finds and registers every single validator in your application assembly
+builder.Services.AddValidatorsFromAssembly(typeof(RS.Application.Features.Auth.Commands.Login.LoginCommand).Assembly);
+
+// 2. Add MediatR alongside the automated validation behavior pipeline 
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(RS.Application.Features.Auth.Commands.Login.LoginCommand).Assembly);
+    cfg.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
+});
 
 
 
