@@ -1,12 +1,17 @@
 using System.Text;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using RS.API.Middleware;
+
 using RS.Application.Common.Interfaces;
 using RS.Infrastructure.Persistence.Migrations;
 using RS.Infrastructure.Persistence.Repositories;
 using RS.Infrastructure.Persistence.Seed;
 using RS.Infrastructure.Services;
+using UMS.Application.Common.Behaviours;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +22,19 @@ builder.Services.AddSwaggerGen();
 // DbContext (PostgreSQL)
 builder.Services.AddDbContext<RSDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+<<<<<<< HEAD
+=======
+// Configure MediatR
+// 1. Automatically finds and registers every single validator in your application assembly
+builder.Services.AddValidatorsFromAssembly(typeof(RS.Application.Features.Auth.Commands.Login.LoginCommand).Assembly);
+
+// 2. Add MediatR alongside the automated validation behavior pipeline 
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(RS.Application.Features.Auth.Commands.Login.LoginCommand).Assembly);
+    cfg.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
+});
+>>>>>>> 26461ee933892e3bf024b9bc88992ebb43e90989
 
 // MediatR
 builder.Services.AddMediatR(cfg =>
@@ -28,6 +46,34 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ITokenService, JwtProvider>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserContext, UserContext>();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "RS API", Version = "v1" });
+
+    // 1. Define the Security Scheme object using HTTP Bearer standards
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Description = "Enter your JWT token directly. Example: 'your_token_here'"
+    });
+
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecuritySchemeReference("Bearer", document),
+            new List<string>() // Explicitly match the List<string> signature
+        }
+    });
+});
+
 
 // JWT Auth
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -50,12 +96,45 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
+<<<<<<< HEAD
 // Swagger
+=======
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<RSDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        logger.LogInformation("Starting database migration...");
+
+        // Ensure database is created and migrations are applied
+        dbContext.Database.Migrate();
+
+        logger.LogInformation("Database migration completed successfully!");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while migrating the database.");
+        throw; // Re-throw
+
+
+
+    }
+}
+
+
+// Configure the HTTP request pipeline.
+>>>>>>> 26461ee933892e3bf024b9bc88992ebb43e90989
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
 
 app.UseHttpsRedirection();
 
