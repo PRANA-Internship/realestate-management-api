@@ -21,26 +21,32 @@ public class PropertyRepository : IPropertyRepository
     }
 
     public async Task<List<Property>> GetAllAsync(
-        string? city,
-        decimal? minPrice,
-        decimal? maxPrice,
-        string? type,
-        int page,
-        int pageSize,
-        CancellationToken ct = default)
+     string? city,
+     decimal? minPrice,
+     decimal? maxPrice,
+     string? type,
+     int page,
+     int pageSize,
+     CancellationToken ct = default)
     {
         var query = _dbContext.Properties
             .Include(p => p.Images)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(city))
+        {
             query = query.Where(x => x.City.ToLower() == city.ToLower());
+        }
 
-        if (minPrice.HasValue)
-            query = query.Where(x => x.Price >= minPrice.Value);
+        if (minPrice is decimal minimumPrice)
+        {
+            query = query.Where(x => x.Price >= minimumPrice);
+        }
 
-        if (maxPrice.HasValue)
-            query = query.Where(x => x.Price <= maxPrice.Value);
+        if (maxPrice is decimal maximumPrice)
+        {
+            query = query.Where(x => x.Price <= maximumPrice);
+        }
 
         if (!string.IsNullOrWhiteSpace(type) &&
             Enum.TryParse<PropertyType>(type, true, out var parsedType))

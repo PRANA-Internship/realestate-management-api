@@ -1,3 +1,4 @@
+using System;
 using MediatR;
 using RS.Application.Common.Interfaces;
 using RS.Domain.Common;
@@ -106,7 +107,7 @@ public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyComman
                 {
                     await _storageService.DeleteImageAsync(imageUrl, ct);
                 }
-                catch
+                catch (Exception)
                 {
                     // Ignore cleanup errors.
                 }

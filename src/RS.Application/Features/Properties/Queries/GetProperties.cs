@@ -1,6 +1,6 @@
 using MediatR;
-using RS.Domain.Common;
 using RS.Contracts.Properties;
+using RS.Domain.Common;
 
 namespace RS.Application.Features.Properties.Queries.GetProperties;
 
