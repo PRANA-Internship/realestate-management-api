@@ -27,6 +27,15 @@ builder.Services.AddDbContext<RSDbContext>(options =>
 // 1. Automatically finds and registers every single validator in your application assembly
 builder.Services.AddValidatorsFromAssembly(typeof(RS.Application.Features.Auth.Commands.Login.LoginCommand).Assembly);
 
+
+// 2. Add MediatR alongside the automated validation behavior pipeline 
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(RS.Application.Features.Auth.Commands.Login.LoginCommand).Assembly);
+    cfg.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
+});
+
+
 // 2. Add MediatR alongside the automated validation behavior pipeline 
 builder.Services.AddMediatR(cfg =>
 {
@@ -46,6 +55,33 @@ builder.Services.AddScoped<ITokenService, JwtProvider>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "RS API", Version = "v1" });
+
+    // 1. Define the Security Scheme object using HTTP Bearer standards
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        Description = "Enter your JWT token directly. Example: 'your_token_here'"
+    });
+
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecuritySchemeReference("Bearer", document),
+            new List<string>() // Explicitly match the List<string> signature
+        }
+    });
+});
+
+
 
 builder.Services.AddSwaggerGen(options =>
 {
