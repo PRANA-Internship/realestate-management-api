@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using RS.Application.Common.Interfaces;
 using RS.Application.Features.Properties.Command.CreateProperty;
 using RS.Domain.Common;
@@ -18,17 +19,20 @@ public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyComman
     private readonly IPropertyRepository _propertyRepository;
     private readonly IUserContext _userContext;
     private readonly IStorageService _storageService;
+    private readonly ILogger<CreatePropertyCommandHandler> _logger;
 
     public CreatePropertyCommandHandler(
         IUnitOfWork unitOfWork,
         IPropertyRepository propertyRepository,
         IUserContext userContext,
-        IStorageService storageService)
+        IStorageService storageService,
+        ILogger<CreatePropertyCommandHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _propertyRepository = propertyRepository;
         _userContext = userContext;
         _storageService = storageService;
+        _logger = logger;
     }
 
     public async Task<Result<Guid>> Handle(CreatePropertyCommand request, CancellationToken ct)
@@ -103,6 +107,10 @@ public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyComman
                     ex is UnauthorizedAccessException ||
                     ex is OperationCanceledException)
                 {
+                    _logger.LogWarning(
+                         ex,
+                         "Failed to delete uploaded image during rollback. ImageUrl: {ImageUrl}",
+                         imageUrl);
 
                 }
             }
