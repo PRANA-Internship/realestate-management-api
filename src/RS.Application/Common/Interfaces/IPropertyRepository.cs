@@ -20,4 +20,8 @@ public interface IPropertyRepository
     int page,
     int pageSize,
     CancellationToken ct = default);
+
+    Task<Property?> GetByIdAsync(
+    Guid id,
+    CancellationToken ct = default);
 }
