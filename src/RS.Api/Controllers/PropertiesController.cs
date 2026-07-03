@@ -5,6 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Properties.Command.CreateProperty;
+using RS.Application.Features.Properties.Commands.DeleteProperty;
+using RS.Application.Features.Properties.Commands.UpdateProperty;
 using RS.Application.Features.Properties.Queries.GetMyProperties;
 using RS.Application.Features.Properties.Queries.GetProperties;
 using RS.Application.Features.Properties.Queries.GetPropertyById;
@@ -68,4 +70,45 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return NotFound(result.Error);
     }
+
+    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(
+    Guid id,
+    [FromBody] UpdatePropertyCommand command,
+    CancellationToken ct)
+    {
+        command.Id = id;
+
+        var result = await mediator.Send(command, ct);
+
+        if (result.IsSuccess)
+        {
+            return NoContent();
+        }
+
+        return NotFound(result.Error);
+
+
+    }
+
+
+    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(
+    Guid id,
+    CancellationToken ct)
+    {
+        var result = await mediator.Send(
+            new DeletePropertyCommand(id),
+            ct);
+
+        if (result.IsSuccess)
+        {
+            return NoContent();
+        }
+
+        return NotFound(result.Error);
+    }
+
 }
