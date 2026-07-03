@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Properties.Command.CreateProperty;
 using RS.Application.Features.Properties.Queries.GetProperties;
+using RS.Application.Features.Properties.Queries.GetPropertyById;
 using RS.Infrastructure.Services;
 
 namespace RS.Api.Controllers;
@@ -36,5 +37,19 @@ public class PropertiesController(IMediator mediator) : ControllerBase
             return Ok(result.Value);
 
         return BadRequest(result.Error);
+    }
+
+    [Authorize(Roles = "ADMIN,MANAGER")]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(
+    Guid id,
+    CancellationToken ct)
+    {
+        var result = await mediator.Send(new GetPropertyByIdQuery(id), ct);
+
+        if (result.IsSuccess)
+            return Ok(result.Value);
+
+        return NotFound(result.Error);
     }
 }

@@ -61,4 +61,15 @@ public class PropertyRepository : IPropertyRepository
 
         return await query.ToListAsync(ct);
     }
+
+    public async Task<Property?> GetByIdAsync(
+    Guid id,
+    CancellationToken ct = default)
+    {
+        return await _dbContext.Properties
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(
+                p => p.Id == id,
+                ct);
+    }
 }
