@@ -108,4 +108,24 @@ public class PropertyRepository : IPropertyRepository
     {
         _dbContext.Properties.Remove(property);
     }
+
+
+    public async Task<PropertyImage?> GetOwnedImageAsync(
+    Guid imageId,
+    Guid userId,
+    CancellationToken ct = default)
+    {
+        return await _dbContext.PropertyImages
+            .Include(i => i.Property)
+            .Include(i => i.Property.Images)
+            .FirstOrDefaultAsync(
+                i => i.Id == imageId &&
+                     i.Property.CreatedByUserId == userId,
+                ct);
+    }
+
+    public void RemoveImage(PropertyImage image)
+    {
+        _dbContext.PropertyImages.Remove(image);
+    }
 }
