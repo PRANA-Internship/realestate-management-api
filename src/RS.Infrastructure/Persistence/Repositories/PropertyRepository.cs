@@ -61,4 +61,19 @@ public class PropertyRepository : IPropertyRepository
 
         return await query.ToListAsync(ct);
     }
+
+    public async Task<List<Property>> GetMyPropertiesAsync(
+    Guid userId,
+    int page,
+    int pageSize,
+    CancellationToken ct = default)
+    {
+        return await _dbContext.Properties
+            .Include(p => p.Images)
+            .Where(p => p.CreatedByUserId == userId)
+            .OrderByDescending(p => p.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+    }
 }

@@ -13,4 +13,11 @@ public interface IPropertyRepository
         int page,
         int pageSize,
         CancellationToken ct = default);
+
+
+    Task<List<Property>> GetMyPropertiesAsync(
+    Guid userId,
+    int page,
+    int pageSize,
+    CancellationToken ct = default);
 }
