@@ -1,4 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using MediatR;
 using RS.Application.Common.Interfaces;
 using RS.Application.Features.Properties.Command.CreateProperty;
@@ -93,9 +97,13 @@ public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyComman
                 {
                     await _storageService.DeleteImageAsync(imageUrl, ct);
                 }
-                catch (Exception)
+                catch (Exception ex) when (
+                    ex is InvalidOperationException ||
+                    ex is IOException ||
+                    ex is UnauthorizedAccessException ||
+                    ex is OperationCanceledException)
                 {
-                    // Ignore cleanup errors.
+
                 }
             }
 
