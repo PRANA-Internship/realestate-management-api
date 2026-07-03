@@ -27,7 +27,7 @@ public class UpdatePropertyCommandHandler
         CancellationToken ct)
     {
         var property = await _propertyRepository.GetOwnedPropertyAsync(
-            request.Id,
+            request.propertyId,
             _userContext.UserId,
             ct);
 

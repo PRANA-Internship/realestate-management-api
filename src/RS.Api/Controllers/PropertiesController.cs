@@ -72,13 +72,13 @@ public class PropertiesController(IMediator mediator) : ControllerBase
     }
 
     [Authorize(Roles = "MANAGER,ADMIN")]
-    [HttpPut("{id:guid}")]
+    [HttpPut]
     public async Task<IActionResult> Update(
-    Guid id,
+
     [FromBody] UpdatePropertyCommand command,
     CancellationToken ct)
     {
-        command.Id = id;
+
 
         var result = await mediator.Send(command, ct);
 

@@ -7,7 +7,7 @@ public class UpdatePropertyCommandValidator : AbstractValidator<UpdatePropertyCo
 {
     public UpdatePropertyCommandValidator()
     {
-        RuleFor(x => x.Id)
+        RuleFor(x => x.propertyId)
             .NotEmpty();
 
         RuleFor(x => x.Title)

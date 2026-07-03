@@ -5,7 +5,7 @@ namespace RS.Application.Features.Properties.Commands.UpdateProperty;
 
 public class UpdatePropertyCommand : IRequest<Result>
 {
-    public Guid Id { get; set; }
+    public Guid propertyId { get; set; }
 
     public string Title { get; set; } = default!;
 
