@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using RS.Infrastructure.Persistence.Migrations;
+using RS.Infrastructure.Persistence;
 
 #nullable disable
 
 namespace RS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RSDbContext))]
-    partial class RSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260703084735_AddPropertyAndPropertyEntity")]
+    partial class AddPropertyAndPropertyEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,53 +25,12 @@ namespace RS.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-<<<<<<< HEAD
-            modelBuilder.Entity("RS.Domain.Entities.Permission", b =>
-=======
             modelBuilder.Entity("RS.Domain.Entities.Property", b =>
->>>>>>> origin/main
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-<<<<<<< HEAD
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
-
-                    b.Property<DateTimeOffset?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Permissions");
-                });
-
-            modelBuilder.Entity("RS.Domain.Entities.RolePermission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("PermissionId")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset?>("UpdatedAt")
-=======
                     b.Property<double>("AreaSize")
                         .HasColumnType("double precision");
 
@@ -123,19 +85,10 @@ namespace RS.Infrastructure.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
->>>>>>> origin/main
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-<<<<<<< HEAD
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("Role", "PermissionId")
-                        .IsUnique();
-
-                    b.ToTable("RolePermissions");
-=======
                     b.ToTable("Properties");
                 });
 
@@ -166,7 +119,6 @@ namespace RS.Infrastructure.Persistence.Migrations
                     b.HasIndex("PropertyId");
 
                     b.ToTable("PropertyImages");
->>>>>>> origin/main
                 });
 
             modelBuilder.Entity("RS.Domain.Entities.User", b =>
@@ -215,22 +167,6 @@ namespace RS.Infrastructure.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("RS.Domain.Entities.RolePermission", b =>
-                {
-                    b.HasOne("RS.Domain.Entities.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-                });
-
-            modelBuilder.Entity("RS.Domain.Entities.Permission", b =>
-                {
-                    b.Navigation("RolePermissions");
-=======
             modelBuilder.Entity("RS.Domain.Entities.PropertyImage", b =>
                 {
                     b.HasOne("RS.Domain.Entities.Property", "Property")
@@ -245,7 +181,6 @@ namespace RS.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("RS.Domain.Entities.Property", b =>
                 {
                     b.Navigation("Images");
->>>>>>> origin/main
                 });
 #pragma warning restore 612, 618
         }

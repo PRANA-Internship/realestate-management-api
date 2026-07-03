@@ -54,8 +54,10 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ITokenService, JwtProvider>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
+builder.Services.AddHttpClient<IStorageService, SupabaseStorageService>();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -146,6 +148,10 @@ using (var scope = app.Services.CreateScope())
 
         // Ensure database is created and migrations are applied
         dbContext.Database.Migrate();
+
+        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+        await DatabaseSeeder.SeedAsync(dbContext, configuration);
 
         logger.LogInformation("Database migration completed successfully!");
     }

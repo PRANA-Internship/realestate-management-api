@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RS.Infrastructure.Persistence.Migrations;
@@ -11,9 +12,11 @@ using RS.Infrastructure.Persistence.Migrations;
 namespace RS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RSDbContext))]
-    partial class RSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260703062253_AddPaymentTransactions")]
+    partial class AddPaymentTransactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,17 +25,12 @@ namespace RS.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-<<<<<<< HEAD
             modelBuilder.Entity("RS.Domain.Entities.Permission", b =>
-=======
-            modelBuilder.Entity("RS.Domain.Entities.Property", b =>
->>>>>>> origin/main
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-<<<<<<< HEAD
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -64,109 +62,21 @@ namespace RS.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("PermissionId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
-=======
-                    b.Property<double>("AreaSize")
-                        .HasColumnType("double precision");
-
-                    b.Property<int>("Bathrooms")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Bedrooms")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Country")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("CreatedByRole")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("UpdatedAt")
->>>>>>> origin/main
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-<<<<<<< HEAD
                     b.HasIndex("PermissionId");
 
                     b.HasIndex("Role", "PermissionId")
                         .IsUnique();
 
                     b.ToTable("RolePermissions");
-=======
-                    b.ToTable("Properties");
-                });
-
-            modelBuilder.Entity("RS.Domain.Entities.PropertyImage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("DisplayOrder")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsPrimary")
-                        .HasColumnType("boolean");
-
-                    b.Property<Guid>("PropertyId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PropertyId");
-
-                    b.ToTable("PropertyImages");
->>>>>>> origin/main
                 });
 
             modelBuilder.Entity("RS.Domain.Entities.User", b =>
@@ -215,7 +125,6 @@ namespace RS.Infrastructure.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-<<<<<<< HEAD
             modelBuilder.Entity("RS.Domain.Entities.RolePermission", b =>
                 {
                     b.HasOne("RS.Domain.Entities.Permission", "Permission")
@@ -230,22 +139,6 @@ namespace RS.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("RS.Domain.Entities.Permission", b =>
                 {
                     b.Navigation("RolePermissions");
-=======
-            modelBuilder.Entity("RS.Domain.Entities.PropertyImage", b =>
-                {
-                    b.HasOne("RS.Domain.Entities.Property", "Property")
-                        .WithMany("Images")
-                        .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Property");
-                });
-
-            modelBuilder.Entity("RS.Domain.Entities.Property", b =>
-                {
-                    b.Navigation("Images");
->>>>>>> origin/main
                 });
 #pragma warning restore 612, 618
         }
