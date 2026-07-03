@@ -12,7 +12,7 @@ using RS.Infrastructure.Persistence;
 namespace RS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RSDbContext))]
-    [Migration("20260702120021_AddPropertyAndPropertyEntity")]
+    [Migration("20260703084735_AddPropertyAndPropertyEntity")]
     partial class AddPropertyAndPropertyEntity
     {
         /// <inheritdoc />
