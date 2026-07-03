@@ -189,11 +189,27 @@ using (var scope = app.Services.CreateScope())
         await PermissionSeeder.SeedAsync(context);
         Console.WriteLine("✅ Permission seeding completed");
     }
-    catch (Exception ex)
+    catch (DbUpdateException ex)
     {
-        Console.WriteLine("❌ Seeding failed:");
+        Console.WriteLine("❌ Seeding Failed (database update error):");
+        Console.WriteLine(ex.Message);
+    }
+
+    catch (InvalidOperationException ex)
+    {
+        Console.WriteLine("❌ Seeding Failed (invalid operation):");
+        Console.WriteLine(ex.Message);
+    }
+
+    catch (Exception ex) when (
+        ex is not OutOfMemoryException &&
+        ex is not StackOverflowException &&
+        ex is not AccessViolationException)
+    {
+        Console.WriteLine("❌ Seeding Failed (unexpected error):");
         Console.WriteLine(ex.Message);
     }
 }
+
 
 app.Run();
