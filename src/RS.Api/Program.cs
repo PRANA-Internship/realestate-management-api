@@ -106,6 +106,10 @@ using (var scope = app.Services.CreateScope())
         // Ensure database is created and migrations are applied
         dbContext.Database.Migrate();
 
+        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+        await DatabaseSeeder.SeedAsync(dbContext, configuration);
+
         logger.LogInformation("Database migration completed successfully!");
     }
     catch (Exception ex)
