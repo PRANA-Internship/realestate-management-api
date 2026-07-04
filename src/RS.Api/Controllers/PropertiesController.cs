@@ -116,14 +116,14 @@ public class PropertiesController(IMediator mediator) : ControllerBase
     }
 
 
-    [Authorize(Roles = "MANAGER")]
-    [HttpPost("{id:guid}/images")]
+    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HttpPost("/images")]
     public async Task<IActionResult> AddImages(
-    Guid id,
+
     [FromForm] AddPropertyImagesCommand command,
     CancellationToken ct)
     {
-        command.PropertyId = id;
+
 
         var result = await mediator.Send(command, ct);
 
@@ -135,7 +135,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [Authorize(Roles = "MANAGER")]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpDelete("images/{imageId:guid}")]
     public async Task<IActionResult> DeleteImage(
         Guid imageId,
@@ -153,7 +153,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [Authorize(Roles = "MANAGER")]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpPatch("images/{imageId:guid}/primary")]
     public async Task<IActionResult> SetPrimaryImage(
         Guid imageId,
@@ -171,14 +171,14 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [Authorize(Roles = "MANAGER")]
-    [HttpPatch("{id:guid}/active")]
+    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HttpPatch("/active")]
     public async Task<IActionResult> ChangeActiveState(
-        Guid id,
+
         [FromBody] ChangePropertyActiveStateCommand command,
         CancellationToken ct)
     {
-        command.PropertyId = id;
+
 
         var result = await mediator.Send(command, ct);
 
