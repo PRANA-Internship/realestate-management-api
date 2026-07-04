@@ -30,5 +30,12 @@ public interface IPropertyRepository
     Guid userId,
     CancellationToken ct = default);
 
+    Task<PropertyImage?> GetOwnedImageAsync(
+    Guid imageId,
+    Guid userId,
+    CancellationToken ct = default);
+
     void Remove(Property property);
+
+    void RemoveImage(PropertyImage image);
 }
