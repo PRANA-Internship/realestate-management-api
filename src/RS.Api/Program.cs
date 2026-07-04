@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using RS.Api.Extensions;
 using RS.API.Middleware;
 
 using RS.Application.Common.Interfaces;
@@ -19,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddApplicationRateLimiting(builder.Configuration);
 //builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
@@ -140,6 +142,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseRateLimiter();
 app.UseAuthorization();
 
 app.MapControllers();
