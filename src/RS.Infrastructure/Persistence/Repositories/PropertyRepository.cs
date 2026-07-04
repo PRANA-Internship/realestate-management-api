@@ -87,4 +87,25 @@ public class PropertyRepository : IPropertyRepository
                 p => p.Id == id,
                 ct);
     }
+
+    public async Task<Property?> GetOwnedPropertyAsync(
+    Guid propertyId,
+    Guid userId,
+    CancellationToken ct = default)
+    {
+        return await _dbContext.Properties
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(
+                p => p.Id == propertyId &&
+                     p.CreatedByUserId == userId,
+                ct);
+
+
+    }
+
+
+    public void Remove(Property property)
+    {
+        _dbContext.Properties.Remove(property);
+    }
 }
