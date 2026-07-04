@@ -24,4 +24,11 @@ public interface IPropertyRepository
     Task<Property?> GetByIdAsync(
     Guid id,
     CancellationToken ct = default);
+
+    Task<Property?> GetOwnedPropertyAsync(
+    Guid propertyId,
+    Guid userId,
+    CancellationToken ct = default);
+
+    void Remove(Property property);
 }
