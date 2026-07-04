@@ -5,7 +5,11 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Properties.Command.CreateProperty;
+using RS.Application.Features.Properties.Commands.AddPropertyImages;
+using RS.Application.Features.Properties.Commands.ChangePropertyActiveState;
 using RS.Application.Features.Properties.Commands.DeleteProperty;
+using RS.Application.Features.Properties.Commands.DeletePropertyImage;
+using RS.Application.Features.Properties.Commands.SetPrimaryPropertyImage;
 using RS.Application.Features.Properties.Commands.UpdateProperty;
 using RS.Application.Features.Properties.Queries.GetMyProperties;
 using RS.Application.Features.Properties.Queries.GetProperties;
@@ -109,6 +113,81 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         }
 
         return NotFound(result.Error);
+    }
+
+
+    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HttpPost("/images")]
+    public async Task<IActionResult> AddImages(
+
+    [FromForm] AddPropertyImagesCommand command,
+    CancellationToken ct)
+    {
+
+
+        var result = await mediator.Send(command, ct);
+
+        if (result.IsSuccess)
+        {
+            return NoContent();
+        }
+
+        return BadRequest(result.Error);
+    }
+
+    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HttpDelete("images/{imageId:guid}")]
+    public async Task<IActionResult> DeleteImage(
+        Guid imageId,
+        CancellationToken ct)
+    {
+        var result = await mediator.Send(
+            new DeletePropertyImageCommand(imageId),
+            ct);
+
+        if (result.IsSuccess)
+        {
+            return NoContent();
+        }
+
+        return BadRequest(result.Error);
+    }
+
+    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HttpPatch("images/{imageId:guid}/primary")]
+    public async Task<IActionResult> SetPrimaryImage(
+        Guid imageId,
+        CancellationToken ct)
+    {
+        var result = await mediator.Send(
+            new SetPrimaryPropertyImageCommand(imageId),
+            ct);
+
+        if (result.IsSuccess)
+        {
+            return NoContent();
+        }
+
+        return BadRequest(result.Error);
+    }
+
+    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HttpPatch("/active")]
+    public async Task<IActionResult> ChangeActiveState(
+
+        [FromBody] ChangePropertyActiveStateCommand command,
+        CancellationToken ct)
+    {
+
+
+        var result = await mediator.Send(command, ct);
+
+        if (result.IsSuccess)
+        {
+            return NoContent();
+        }
+
+        return BadRequest(result.Error);
     }
 
 }
