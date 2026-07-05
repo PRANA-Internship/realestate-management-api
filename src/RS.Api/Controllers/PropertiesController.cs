@@ -14,6 +14,8 @@ using RS.Application.Features.Properties.Commands.UpdateProperty;
 using RS.Application.Features.Properties.Queries.GetMyProperties;
 using RS.Application.Features.Properties.Queries.GetProperties;
 using RS.Application.Features.Properties.Queries.GetPropertyById;
+using RS.Application.Features.Properties.Queries.GetPublicProperties;
+using RS.Application.Features.Properties.Queries.GetPublicPropertyById;
 
 namespace RS.Api.Controllers;
 
@@ -21,6 +23,41 @@ namespace RS.Api.Controllers;
 [Route("api/[controller]")]
 public class PropertiesController(IMediator mediator) : ControllerBase
 {
+
+
+    [AllowAnonymous]
+    [HttpGet("public")]
+    public async Task<IActionResult> GetPublicProperties(
+    [FromQuery] GetPublicPropertiesQuery query,
+    CancellationToken ct)
+    {
+        var result = await mediator.Send(query, ct);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("public/{id:guid}")]
+    public async Task<IActionResult> GetPublicProperty(
+    Guid id,
+    CancellationToken ct)
+    {
+        var result = await mediator.Send(
+            new GetPublicPropertyByIdQuery(id),
+            ct);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return NotFound(result.Error);
+    }
     [Authorize(Roles = "ADMIN,MANAGER")]
     [HttpPost]
     public async Task<IActionResult> Create([FromForm] CreatePropertyCommand command, CancellationToken ct)

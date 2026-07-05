@@ -40,4 +40,17 @@ public interface IPropertyRepository
     void RemoveImage(PropertyImage image);
 
     Task<Property?> GetPropertyForUpdateAsync(Guid propertyId, CancellationToken ct = default);
+
+    Task<List<Property>> GetPublicPropertiesAsync(
+   string? city,
+   decimal? minPrice,
+   decimal? maxPrice,
+   string? type,
+   int page,
+   int pageSize,
+   CancellationToken ct = default);
+
+    Task<Property?> GetPublicPropertyByIdAsync(
+        Guid propertyId,
+        CancellationToken ct = default);
 }

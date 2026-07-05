@@ -140,4 +140,69 @@ public class PropertyRepository : IPropertyRepository
         ")
             .FirstOrDefaultAsync(ct);
     }
+
+    public async Task<List<Property>> GetPublicPropertiesAsync(
+    string? city,
+    decimal? minPrice,
+    decimal? maxPrice,
+    string? type,
+    int page,
+    int pageSize,
+    CancellationToken ct = default)
+    {
+        var query = _dbContext.Properties
+            .Include(x => x.Images)
+            .Where(x =>
+                x.IsActive &&
+                x.Status == PropertyStatus.Available)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(city))
+        {
+            query = query.Where(x =>
+                x.City.ToLower() == city.ToLower());
+        }
+
+        if (minPrice.HasValue)
+        {
+            query = query.Where(x =>
+                x.Price >= minPrice.Value);
+        }
+
+        if (maxPrice.HasValue)
+        {
+            query = query.Where(x =>
+                x.Price <= maxPrice.Value);
+        }
+
+        if (!string.IsNullOrWhiteSpace(type) &&
+            Enum.TryParse<PropertyType>(
+                type,
+                true,
+                out var propertyType))
+        {
+            query = query.Where(x =>
+                x.Type == propertyType);
+        }
+
+        return await query
+            .OrderByDescending(x => x.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
+    }
+
+    public async Task<Property?> GetPublicPropertyByIdAsync(
+    Guid propertyId,
+    CancellationToken ct = default)
+    {
+        return await _dbContext.Properties
+            .Include(x => x.Images)
+            .FirstOrDefaultAsync(
+                x =>
+                    x.Id == propertyId &&
+                    x.IsActive &&
+                    x.Status == PropertyStatus.Available,
+                ct);
+    }
 }

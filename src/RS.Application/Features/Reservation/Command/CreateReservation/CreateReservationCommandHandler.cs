@@ -66,8 +66,7 @@ public class CreateReservationCommandHandler
         }
 
 
-        var allowGuest = await _configurationService.GetBooleanAsync(
-            "Reservation.AllowGuestReservation", ct);
+
 
         bool isAuthenticated = _userContext.UserId != Guid.Empty;
 
@@ -91,11 +90,6 @@ public class CreateReservationCommandHandler
         }
         else
         {
-            if (!allowGuest)
-            {
-                return Result<Guid>.Failure(
-                    new Error("GUEST_NOT_ALLOWED", "Guest reservations are not allowed."));
-            }
 
             if (string.IsNullOrWhiteSpace(request.BuyerFullName) ||
                 string.IsNullOrWhiteSpace(request.BuyerEmail) ||
