@@ -15,6 +15,8 @@ namespace RS.Infrastructure.Persistence
         public DbSet<PropertyImage> PropertyImages { get; set; }
 
         public DbSet<SystemConfiguration> SystemConfigurations { get; set; }
+
+        public DbSet<Reservation> Reservations { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RSDbContext).Assembly);
