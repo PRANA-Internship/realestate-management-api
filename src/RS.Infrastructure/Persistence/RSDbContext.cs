@@ -13,6 +13,8 @@ namespace RS.Infrastructure.Persistence
         public DbSet<User> Users { get; set; }
         public DbSet<Property> Properties { get; set; }
         public DbSet<PropertyImage> PropertyImages { get; set; }
+
+        public DbSet<SystemConfiguration> SystemConfigurations { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RSDbContext).Assembly);
