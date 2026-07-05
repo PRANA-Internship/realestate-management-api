@@ -38,4 +38,6 @@ public interface IPropertyRepository
     void Remove(Property property);
 
     void RemoveImage(PropertyImage image);
+
+    Task<Property?> GetPropertyForUpdateAsync(Guid propertyId, CancellationToken ct = default);
 }

@@ -128,4 +128,16 @@ public class PropertyRepository : IPropertyRepository
     {
         _dbContext.PropertyImages.Remove(image);
     }
+
+
+    public async Task<Property?> GetPropertyForUpdateAsync(Guid propertyId, CancellationToken ct = default)
+    {
+        return await _dbContext.Properties
+            .FromSqlInterpolated($@"
+            SELECT * FROM ""Properties""
+            WHERE ""Id"" = {propertyId}
+            FOR UPDATE
+        ")
+            .FirstOrDefaultAsync(ct);
+    }
 }
