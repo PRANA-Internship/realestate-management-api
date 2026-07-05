@@ -163,16 +163,14 @@ public class PropertyRepository : IPropertyRepository
                 x.City.ToLower() == city.ToLower());
         }
 
-        if (minPrice.HasValue)
+        if (minPrice is decimal min)
         {
-            query = query.Where(x =>
-                x.Price >= minPrice.Value);
+            query = query.Where(x => x.Price >= min);
         }
 
-        if (maxPrice.HasValue)
+        if (maxPrice is decimal max)
         {
-            query = query.Where(x =>
-                x.Price <= maxPrice.Value);
+            query = query.Where(x => x.Price <= max);
         }
 
         if (!string.IsNullOrWhiteSpace(type) &&
