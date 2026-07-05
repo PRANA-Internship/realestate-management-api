@@ -54,6 +54,7 @@ builder.Services.AddHttpClient<IStorageService, SupabaseStorageService>();
 builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddHostedService<ReservationExpirationService>();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "RS API", Version = "v1" });
