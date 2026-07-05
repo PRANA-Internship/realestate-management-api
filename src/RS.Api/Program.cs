@@ -49,6 +49,8 @@ builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddHttpClient<IStorageService, SupabaseStorageService>();
+builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
+builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
 
 builder.Services.AddSwaggerGen(options =>
 {
