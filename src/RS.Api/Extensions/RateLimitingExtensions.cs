@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Http;
@@ -9,21 +11,12 @@ namespace RS.Api.Extensions;
 
 public static class RateLimitingExtensions
 {
+
     private static readonly Dictionary<string, string> Policies = new()
     {
-        ["login"] = "RateLimiting:Login",
-        ["register"] = "RateLimiting:Register",
-        ["authenticated"] = "RateLimiting:Authenticated",
-
-        ["property-create"] = "RateLimiting:PropertyCreate",
-        ["property-update"] = "RateLimiting:PropertyUpdate",
-        ["property-delete"] = "RateLimiting:PropertyDelete",
-
-        ["reservation"] = "RateLimiting:Reservation",
-        ["purchase"] = "RateLimiting:Purchase",
-        ["payment"] = "RateLimiting:Payment",
-
-        ["admin"] = "RateLimiting:Admin"
+        ["authentication"] = "RateLimiting:Authentication",
+        ["action"] = "RateLimiting:Action",
+        ["public"] = "RateLimiting:Public"
     };
 
     public static IServiceCollection AddApplicationRateLimiting(
@@ -72,13 +65,13 @@ public static class RateLimitingExtensions
         var permitLimit = configuration.GetValue<int>($"{configurationPath}:PermitLimit");
         if (permitLimit <= 0)
         {
-            permitLimit = 100;
+            permitLimit = 100; // Safe fallback
         }
 
         var windowSeconds = configuration.GetValue<int>($"{configurationPath}:WindowSeconds");
         if (windowSeconds <= 0)
         {
-            windowSeconds = 60;
+            windowSeconds = 60; // Safe fallback
         }
 
         options.AddPolicy(policyName, httpContext =>
@@ -109,10 +102,9 @@ public static class RateLimitingExtensions
             }
         }
 
-        var ip = context.Connection.RemoteIpAddress?.ToString();
+        var ip = context.Connection.RemoteIpAddress?.ToString()
+                 ?? context.Request.Headers["X-Forwarded-For"].ToString();
 
-        return !string.IsNullOrWhiteSpace(ip)
-            ? $"ip:{ip}"
-            : "anonymous";
+        return !string.IsNullOrWhiteSpace(ip) ? $"ip:{ip}" : "anonymous";
     }
 }
