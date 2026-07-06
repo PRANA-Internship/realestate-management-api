@@ -1,9 +1,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Auth.Commands.Login;
 using RS.Application.Features.Auth.Commands.RegisterBuyer;
+using RS.Application.Features.Users.Commands.CreateManager;
+using RS.Application.Features.Users.Commands.SetPassword;
 
 namespace RS.Api.Controllers
 {
@@ -11,6 +14,28 @@ namespace RS.Api.Controllers
     [Route("api/[controller]")]
     public class AuthController(IMediator mediator) : ControllerBase
     {
+
+        [Authorize(Roles = "ADMIN")]
+        [HttpPost("managers")]
+        public async Task<IActionResult> CreateManager(
+            [FromBody] CreateManagerCommand command,
+            CancellationToken ct)
+        {
+            var result = await mediator.Send(command, ct);
+
+            if (result.IsSuccess)
+            {
+                return Ok(new
+                {
+                    ManagerId = result.Value,
+                    Message = "Manager created successfully."
+                });
+            }
+
+            return BadRequest(result.Error);
+        }
+
+
         [HttpPost("register/buyer")]
         public async Task<IActionResult> RegisterBuyer([FromBody] RegisterBuyerCommand command, CancellationToken ct)
         {
@@ -30,5 +55,20 @@ namespace RS.Api.Controllers
 
             return Unauthorized(new { Error = result.Error });
         }
+
+
+        [HttpPost("set-password")]
+        public async Task<IActionResult> SetPassword(
+        SetPasswordCommand command,
+        CancellationToken ct)
+        {
+            var result = await mediator.Send(command, ct);
+
+            if (result.IsSuccess)
+                return Ok(new { Message = "Account activated successfully" });
+
+            return BadRequest(result.Error);
+        }
     }
 }
+
