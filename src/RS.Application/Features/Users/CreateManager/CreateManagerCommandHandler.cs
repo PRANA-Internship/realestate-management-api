@@ -66,7 +66,7 @@ public class CreateManagerCommandHandler
 
         manager.SetCreatedBy(admin.Id);
         var token = manager.GeneratePasswordResetToken();
-        Console.WriteLine("Token: ", token);
+
         manager.SetStatus(UserStatus.INACTIVE);
 
 
