@@ -21,4 +21,16 @@ public interface IReservationRepository
         CancellationToken ct = default);
 
 
+    Task<Reservation?> GetByIdAsync(
+    Guid reservationId,
+    CancellationToken ct = default);
+
+    Task<List<Reservation>> GetMyReservationsAsync(
+        Guid buyerUserId,
+        CancellationToken ct = default);
+
+    Task<List<Reservation>> GetExpiredPendingReservationsAsync(
+        CancellationToken ct = default);
+
+    void Update(Reservation reservation);
 }

@@ -51,5 +51,42 @@ public class ReservationRepository(RSDbContext dbContext)
             ct);
     }
 
+    public async Task<Reservation?> GetByIdAsync(
+    Guid reservationId,
+    CancellationToken ct = default)
+    {
+        return await dbContext.Reservations
+            .Include(x => x.Property)
+            .ThenInclude(x => x.Images)
+            .FirstOrDefaultAsync(
+                x => x.Id == reservationId,
+                ct);
+    }
 
+    public async Task<List<Reservation>> GetMyReservationsAsync(
+    Guid buyerUserId,
+    CancellationToken ct = default)
+    {
+        return await dbContext.Reservations
+            .Include(x => x.Property)
+            .ThenInclude(x => x.Images)
+            .Where(x => x.BuyerUserId == buyerUserId)
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync(ct);
+    }
+
+    public async Task<List<Reservation>> GetExpiredPendingReservationsAsync(
+    CancellationToken ct = default)
+    {
+        return await dbContext.Reservations
+            .Where(x =>
+                x.Status == ReservationStatus.PendingPayment &&
+                x.ExpiresAt <= DateTime.UtcNow)
+            .ToListAsync(ct);
+    }
+
+    public void Update(Reservation reservation)
+    {
+        dbContext.Reservations.Update(reservation);
+    }
 }
