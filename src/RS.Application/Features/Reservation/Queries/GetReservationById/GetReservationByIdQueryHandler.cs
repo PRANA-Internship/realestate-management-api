@@ -36,17 +36,16 @@ public class GetReservationByIdQueryHandler
                     "Reservation was not found."));
         }
 
-        // Admin and Manager can access any reservation.
-        if (_userContext.Role != UserRole.ADMIN &&
-            _userContext.Role != UserRole.MANAGER)
+
+        bool isPrivileged = _userContext.Role == UserRole.ADMIN || _userContext.Role == UserRole.MANAGER;
+        bool isOwner = reservation.BuyerUserId == _userContext.UserId;
+
+        if (!isPrivileged && !isOwner)
         {
-            if (reservation.BuyerUserId != _userContext.UserId)
-            {
-                return Result<ReservationDetailResponse>.Failure(
-                    new Error(
-                        "FORBIDDEN",
-                        "You do not have permission to view this reservation."));
-            }
+            return Result<ReservationDetailResponse>.Failure(
+                new Error(
+                    "FORBIDDEN",
+                    "You do not have permission to view this reservation."));
         }
 
         var response = new ReservationDetailResponse(
