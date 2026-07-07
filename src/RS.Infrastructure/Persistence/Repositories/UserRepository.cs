@@ -44,21 +44,23 @@ namespace RS.Infrastructure.Persistence.Repositories
         }
 
         public async Task<IReadOnlyList<User>> GetUsersAsync(
-    UserRole? role,
-    UserStatus? status,
-    string? search,
-    CancellationToken ct = default)
+      UserRole? role,
+      UserStatus? status,
+      string? search,
+      CancellationToken ct = default)
         {
             IQueryable<User> query = dbContext.Users;
 
             if (role.HasValue)
             {
-                query = query.Where(x => x.Role == role.Value);
+                var roleValue = role.Value;
+                query = query.Where(x => x.Role == roleValue);
             }
 
             if (status.HasValue)
             {
-                query = query.Where(x => x.Status == status.Value);
+                var statusValue = status.Value;
+                query = query.Where(x => x.Status == statusValue);
             }
 
             if (!string.IsNullOrWhiteSpace(search))
