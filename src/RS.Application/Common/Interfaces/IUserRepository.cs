@@ -12,5 +12,7 @@ namespace RS.Application.Common.Interfaces
         Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default);
         Task AddAsync(User user, CancellationToken ct = default);
         Task UpdateAsync(User user, CancellationToken ct = default);
+
+        Task<User?> GetByResetTokenAsync(string token, CancellationToken ct = default);
     }
 }

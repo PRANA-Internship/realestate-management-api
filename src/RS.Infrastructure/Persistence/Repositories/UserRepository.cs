@@ -32,7 +32,14 @@ namespace RS.Infrastructure.Persistence.Repositories
         public Task UpdateAsync(User user, CancellationToken ct = default)
         {
             dbContext.Users.Update(user);
+
             return Task.CompletedTask;
+        }
+
+        public async Task<User?> GetByResetTokenAsync(string token, CancellationToken ct = default)
+        {
+            return await dbContext.Users
+                .FirstOrDefaultAsync(x => x.PasswordResetToken == token, ct);
         }
     }
 }
