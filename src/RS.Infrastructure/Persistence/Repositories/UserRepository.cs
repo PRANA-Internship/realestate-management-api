@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RS.Application.Common.Interfaces;
 using RS.Domain.Entities;
+using RS.Domain.Enums;
 
 namespace RS.Infrastructure.Persistence.Repositories
 {
@@ -40,6 +41,46 @@ namespace RS.Infrastructure.Persistence.Repositories
         {
             return await dbContext.Users
                 .FirstOrDefaultAsync(x => x.PasswordResetToken == token, ct);
+        }
+
+        public async Task<IReadOnlyList<User>> GetUsersAsync(
+    UserRole? role,
+    UserStatus? status,
+    string? search,
+    CancellationToken ct = default)
+        {
+            IQueryable<User> query = dbContext.Users;
+
+            if (role.HasValue)
+            {
+                query = query.Where(x => x.Role == role.Value);
+            }
+
+            if (status.HasValue)
+            {
+                query = query.Where(x => x.Status == status.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+
+                query = query.Where(x =>
+                    x.FullName.ToLower().Contains(search) ||
+                    x.Email.ToLower().Contains(search));
+            }
+
+            return await query
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(ct);
+        }
+
+        public async Task<User?> GetByIdWithDetailsAsync(
+            Guid id,
+            CancellationToken ct = default)
+        {
+            return await dbContext.Users
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
         }
     }
 }
