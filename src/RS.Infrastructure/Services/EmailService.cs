@@ -93,7 +93,7 @@ namespace RS.Infrastructure.Services
         <p>If the button doesn't work:</p>
 
         <p>{activationUrl}</p>";
-            logger.LogInformation("Password reset initiated for user: {ToEmail}. Link: {ActivationUrl}", toEmail, activationUrl);
+
             await SendEmailAsync(
                 toEmail,
                 subject,
