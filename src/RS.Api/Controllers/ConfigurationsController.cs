@@ -4,12 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Configurations.Commands.UpdateConfiguration;
 using RS.Application.Features.Configurations.Queries.GetConfigurationByKey;
 using RS.Application.Features.Configurations.Queries.GetConfigurations;
+using RS.Infrastructure.Authentication;
+using RS.Domain.Enums;
 
 namespace RS.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "ADMIN")]
+[HasPermission(Permission.ManageConfigurations)]
 public class ConfigurationsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
