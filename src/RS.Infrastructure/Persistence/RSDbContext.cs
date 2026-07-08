@@ -17,6 +17,7 @@ namespace RS.Infrastructure.Persistence
         public DbSet<SystemConfiguration> SystemConfigurations { get; set; }
 
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RSDbContext).Assembly);

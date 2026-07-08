@@ -15,6 +15,8 @@ using RS.Infrastructure.Persistence;
 using RS.Infrastructure.Persistence.Repositories;
 using RS.Infrastructure.Services;
 using UMS.Application.Common.Behaviours;
+using Microsoft.AspNetCore.Authorization;
+using RS.Infrastructure.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +56,9 @@ builder.Services.AddHttpClient<IStorageService, SupabaseStorageService>();
 builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IPermissionProvider, DbPermissionProvider>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 builder.Services.AddHostedService<ReservationExpirationService>();
 builder.Services.AddSwaggerGen(options =>
 {
