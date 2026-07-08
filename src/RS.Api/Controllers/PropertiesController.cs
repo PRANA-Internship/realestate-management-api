@@ -16,8 +16,8 @@ using RS.Application.Features.Properties.Queries.GetProperties;
 using RS.Application.Features.Properties.Queries.GetPropertyById;
 using RS.Application.Features.Properties.Queries.GetPublicProperties;
 using RS.Application.Features.Properties.Queries.GetPublicPropertyById;
-using RS.Infrastructure.Authentication;
 using RS.Domain.Enums;
+using RS.Infrastructure.Authentication;
 
 namespace RS.Api.Controllers;
 

@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Configurations.Commands.UpdateConfiguration;
 using RS.Application.Features.Configurations.Queries.GetConfigurationByKey;
 using RS.Application.Features.Configurations.Queries.GetConfigurations;
-using RS.Infrastructure.Authentication;
 using RS.Domain.Enums;
+using RS.Infrastructure.Authentication;
 
 namespace RS.Api.Controllers;
 
