@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using RS.Application.Common.Interfaces;
 using RS.Domain.Entities;
+using RS.Domain.Enums;
 
 namespace RS.Infrastructure.Persistence.Repositories
 {
@@ -32,7 +33,83 @@ namespace RS.Infrastructure.Persistence.Repositories
         public Task UpdateAsync(User user, CancellationToken ct = default)
         {
             dbContext.Users.Update(user);
+
             return Task.CompletedTask;
+        }
+
+        public async Task<User?> GetByResetTokenAsync(string token, CancellationToken ct = default)
+        {
+            return await dbContext.Users
+                .FirstOrDefaultAsync(x => x.PasswordResetToken == token, ct);
+        }
+
+        public async Task<IReadOnlyList<User>> GetUsersAsync(
+      UserRole? role,
+      UserStatus? status,
+      string? search,
+      CancellationToken ct = default)
+        {
+            IQueryable<User> query = dbContext.Users;
+
+            if (role.HasValue)
+            {
+                var roleValue = role.Value;
+                query = query.Where(x => x.Role == roleValue);
+            }
+
+            if (status.HasValue)
+            {
+                var statusValue = status.Value;
+                query = query.Where(x => x.Status == statusValue);
+            }
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.Trim().ToLower();
+
+                query = query.Where(x =>
+                    x.FullName.ToLower().Contains(search) ||
+                    x.Email.ToLower().Contains(search));
+            }
+
+            return await query
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(ct);
+        }
+
+        public async Task<User?> GetByIdWithDetailsAsync(
+            Guid id,
+            CancellationToken ct = default)
+        {
+            return await dbContext.Users
+                .FirstOrDefaultAsync(x => x.Id == id, ct);
+        }
+
+        public async Task<IReadOnlyCollection<User>> GetSalesByManagerAsync(
+    Guid managerId,
+    CancellationToken ct = default)
+        {
+            return await dbContext.Users
+                .Where(x =>
+                    x.Role == UserRole.SALES &&
+                    x.CreatedByUserId == managerId)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(ct);
+        }
+
+
+        public async Task<User?> GetSalesByManagerAndIdAsync(
+            Guid managerId,
+            Guid salesId,
+            CancellationToken ct = default)
+        {
+            return await dbContext.Users
+                .FirstOrDefaultAsync(
+                    x =>
+                        x.Id == salesId &&
+                        x.Role == UserRole.SALES &&
+                        x.CreatedByUserId == managerId,
+                    ct);
         }
     }
 }

@@ -13,53 +13,83 @@ public static class DatabaseSeeder
         IConfiguration configuration)
     {
         await SeedAdminAsync(context, configuration);
-
         await SeedManagerAsync(context, configuration);
 
         await context.SaveChangesAsync();
     }
 
+    // ---------------- ADMIN ----------------
     private static async Task SeedAdminAsync(
         RSDbContext context,
         IConfiguration configuration)
     {
-        var email = configuration["SeedUsers:Admin:Email"];
+        var email = configuration["SeedUsers:Admin:Email"]!;
 
-        if (await context.Users.AnyAsync(x => x.Email == email))
-            return;
+        var admin = await context.Users
+            .FirstOrDefaultAsync(x => x.Email == email);
 
-        var admin = User.CreateStaff(
-            configuration["SeedUsers:Admin:FullName"]!,
-            email!,
-            configuration["SeedUsers:Admin:Phone"]!,
-            UserRole.ADMIN);
+        if (admin == null)
+        {
+            admin = User.CreateStaff(
+                configuration["SeedUsers:Admin:FullName"]!,
+                email,
+                configuration["SeedUsers:Admin:Phone"]!,
+                UserRole.ADMIN);
 
-        admin.ActivateWithPassword(
-            BCrypt.Net.BCrypt.HashPassword(
-                configuration["SeedUsers:Admin:Password"]!));
+            admin.ActivateWithPassword(
+                BCrypt.Net.BCrypt.HashPassword(
+                    configuration["SeedUsers:Admin:Password"]!));
 
-        await context.Users.AddAsync(admin);
+            await context.Users.AddAsync(admin);
+        }
+        else
+        {
+            admin.UpdateProfileSafe(
+                configuration["SeedUsers:Admin:FullName"]!,
+                configuration["SeedUsers:Admin:Phone"]!);
+        }
     }
 
+    // ---------------- MANAGER ----------------
     private static async Task SeedManagerAsync(
         RSDbContext context,
         IConfiguration configuration)
     {
-        var email = configuration["SeedUsers:Manager:Email"];
+        var email = configuration["SeedUsers:Manager:Email"]!;
 
-        if (await context.Users.AnyAsync(x => x.Email == email))
-            return;
+        var manager = await context.Users
+            .FirstOrDefaultAsync(x => x.Email == email);
 
-        var manager = User.CreateStaff(
-            configuration["SeedUsers:Manager:FullName"]!,
-            email!,
-            configuration["SeedUsers:Manager:Phone"]!,
-            UserRole.MANAGER);
+        var admin = await context.Users
+            .FirstAsync(x => x.Role == UserRole.ADMIN);
 
-        manager.ActivateWithPassword(
-            BCrypt.Net.BCrypt.HashPassword(
-                configuration["SeedUsers:Manager:Password"]!));
+        if (manager == null)
+        {
+            manager = User.CreateStaff(
+                configuration["SeedUsers:Manager:FullName"]!,
+                email,
+                configuration["SeedUsers:Manager:Phone"]!,
+                UserRole.MANAGER);
 
-        await context.Users.AddAsync(manager);
+            manager.SetCreatedBy(admin.Id);
+
+            manager.ActivateWithPassword(
+                BCrypt.Net.BCrypt.HashPassword(
+                    configuration["SeedUsers:Manager:Password"]!));
+
+            await context.Users.AddAsync(manager);
+        }
+        else
+        {
+            manager.UpdateProfileSafe(
+                configuration["SeedUsers:Manager:FullName"]!,
+                configuration["SeedUsers:Manager:Phone"]!);
+
+            // ORPHAN ISSUE 
+            //if (manager.CreatedByUserId == null)
+            //{
+            //    manager.SetCreatedBy(admin.Id);
+            //}
+        }
     }
 }
