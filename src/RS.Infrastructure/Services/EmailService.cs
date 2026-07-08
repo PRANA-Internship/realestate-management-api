@@ -62,11 +62,43 @@ namespace RS.Infrastructure.Services
             await SendEmailAsync(toEmail, subject, body, ct);
         }
 
-        public async Task SendPasswordSetupAsync(string toEmail, string fullName, string token, CancellationToken ct = default)
+        public async Task SendPasswordSetupAsync(
+     string toEmail,
+     string fullName,
+     string activationUrl,
+     CancellationToken ct = default)
         {
-            var subject = "Setup your password";
-            var body = $"<h1>Welcome {fullName},</h1><p>Please setup your password using this token: <strong>{token}</strong></p>";
-            await SendEmailAsync(toEmail, subject, body, ct);
+            var subject = "Activate your Manager Account";
+
+            var body = $@"
+        <h2>Welcome {fullName},</h2>
+
+        <p>Your manager account has been created successfully.</p>
+
+        <p>Please click the button below to set your password.</p>
+
+        <p>
+            <a href='{activationUrl}'
+               style='padding:12px 20px;
+                      background:#2563EB;
+                      color:white;
+                      text-decoration:none;
+                      border-radius:6px'>
+                Set Password
+            </a>
+        </p>
+
+        <p>This link expires in 24 hours.</p>
+
+        <p>If the button doesn't work:</p>
+
+        <p>{activationUrl}</p>";
+
+            await SendEmailAsync(
+                toEmail,
+                subject,
+                body,
+                ct);
         }
 
         public async Task SendWelcomeEmailAsync(
