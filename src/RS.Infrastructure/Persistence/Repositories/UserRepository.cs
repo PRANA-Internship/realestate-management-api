@@ -84,5 +84,32 @@ namespace RS.Infrastructure.Persistence.Repositories
             return await dbContext.Users
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
         }
+
+        public async Task<IReadOnlyCollection<User>> GetSalesByManagerAsync(
+    Guid managerId,
+    CancellationToken ct = default)
+        {
+            return await dbContext.Users
+                .Where(x =>
+                    x.Role == UserRole.SALES &&
+                    x.CreatedByUserId == managerId)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToListAsync(ct);
+        }
+
+
+        public async Task<User?> GetSalesByManagerAndIdAsync(
+            Guid managerId,
+            Guid salesId,
+            CancellationToken ct = default)
+        {
+            return await dbContext.Users
+                .FirstOrDefaultAsync(
+                    x =>
+                        x.Id == salesId &&
+                        x.Role == UserRole.SALES &&
+                        x.CreatedByUserId == managerId,
+                    ct);
+        }
     }
 }

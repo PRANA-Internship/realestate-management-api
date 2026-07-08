@@ -25,5 +25,16 @@ namespace RS.Application.Common.Interfaces
         Task<User?> GetByIdWithDetailsAsync(
             Guid id,
             CancellationToken ct = default);
+
+        Task<IReadOnlyCollection<User>> GetSalesByManagerAsync(
+        Guid managerId,
+        CancellationToken ct = default);
+
+        Task<User?> GetSalesByManagerAndIdAsync(
+            Guid managerId,
+            Guid salesId,
+            CancellationToken ct = default);
+
+
     }
 }
