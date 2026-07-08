@@ -1,6 +1,7 @@
 using System.Text;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,14 +10,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using RS.Api.Extensions;
 using RS.API.Middleware;
-
 using RS.Application.Common.Interfaces;
+using RS.Infrastructure.Authentication;
 using RS.Infrastructure.Persistence;
 using RS.Infrastructure.Persistence.Repositories;
 using RS.Infrastructure.Services;
 using UMS.Application.Common.Behaviours;
-using Microsoft.AspNetCore.Authorization;
-using RS.Infrastructure.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 

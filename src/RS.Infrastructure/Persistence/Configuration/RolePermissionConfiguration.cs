@@ -26,10 +26,10 @@ namespace RS.Infrastructure.Persistence.Configuration
             // Admin role permissions (All permissions)
             foreach (Permission p in Enum.GetValues<Permission>())
             {
-                data.Add(new RolePermission 
-                { 
-                    Role = UserRole.ADMIN, 
-                    PermissionName = p.ToString() 
+                data.Add(new RolePermission
+                {
+                    Role = UserRole.ADMIN,
+                    PermissionName = p.ToString()
                 });
             }
 
@@ -49,10 +49,10 @@ namespace RS.Infrastructure.Persistence.Configuration
 
             foreach (var p in managerPermissions)
             {
-                data.Add(new RolePermission 
-                { 
-                    Role = UserRole.MANAGER, 
-                    PermissionName = p.ToString() 
+                data.Add(new RolePermission
+                {
+                    Role = UserRole.MANAGER,
+                    PermissionName = p.ToString()
                 });
             }
 
