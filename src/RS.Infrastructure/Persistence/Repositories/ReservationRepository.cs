@@ -89,4 +89,17 @@ public class ReservationRepository(RSDbContext dbContext)
     {
         dbContext.Reservations.Update(reservation);
     }
+
+    public async Task<IReadOnlyList<Reservation>> GetActiveForManagerAsync(
+    Guid managerId,
+    CancellationToken ct)
+    {
+        return await dbContext.Reservations
+            .Include(r => r.Property)
+            .Where(r =>
+                r.Property.CreatedByUserId == managerId &&
+                r.ExpiresAt > DateTime.UtcNow)
+            .OrderByDescending(r => r.ReservedAt)
+            .ToListAsync(ct);
+    }
 }

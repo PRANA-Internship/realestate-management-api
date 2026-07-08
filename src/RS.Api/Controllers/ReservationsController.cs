@@ -78,4 +78,19 @@ public class ReservationsController(IMediator mediator) : ControllerBase
 
         return BadRequest(result.Error);
     }
+
+    [Authorize]
+    [HttpGet("active")]
+    public async Task<IActionResult> GetActiveReservations(
+    CancellationToken ct)
+    {
+        var result = await mediator.Send(
+            new GetActiveReservationsQuery(),
+            ct);
+
+        if (result.IsSuccess)
+            return Ok(result.Value);
+
+        return BadRequest(result.Error);
+    }
 }

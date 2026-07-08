@@ -53,4 +53,8 @@ public interface IPropertyRepository
     Task<Property?> GetPublicPropertyByIdAsync(
         Guid propertyId,
         CancellationToken ct = default);
+
+    Task<IReadOnlyList<Property>> GetAvailableForSalesAsync(
+    Guid managerId,
+    CancellationToken ct);
 }
