@@ -1,8 +1,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RS.Application.Features.Users.Commands.UpdateMySalesStatus;
 using RS.Application.Features.Users.Commands.UpdateUser;
 using RS.Application.Features.Users.Commands.UpdateUserStatus;
+using RS.Application.Features.Users.Queries.GetMySales;
+using RS.Application.Features.Users.Queries.GetMySalesById;
 using RS.Application.Features.Users.Queries.GetUserById;
 using RS.Application.Features.Users.Queries.GetUsers;
 using RS.Domain.Enums;
@@ -136,6 +139,89 @@ public class UsersController(IMediator mediator) : ControllerBase
 
 
         if (result.Error.Code == "USER_NOT_FOUND")
+        {
+            return NotFound(result.Error);
+        }
+
+
+        return BadRequest(result.Error);
+    }
+
+
+    [Authorize(Roles = "MANAGER")]
+    [HttpGet("my-sales")]
+    public async Task<IActionResult> GetMySales(
+    CancellationToken ct)
+    {
+        var result = await mediator.Send(
+            new GetMySalesQuery(),
+            ct);
+
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+
+        return BadRequest(result.Error);
+    }
+
+    [Authorize(Roles = "MANAGER")]
+    [HttpGet("my-sales/{id:guid}")]
+    public async Task<IActionResult> GetMySalesById(
+    Guid id,
+    CancellationToken ct)
+    {
+
+        var result = await mediator.Send(
+            new GetMySalesByIdQuery(id),
+            ct);
+
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+
+        if (result.Error.Code == "SALES_NOT_FOUND")
+        {
+            return NotFound(result.Error);
+        }
+
+
+        return BadRequest(result.Error);
+    }
+
+    [Authorize(Roles = "MANAGER")]
+    [HttpPatch("my-sales/{id:guid}/status")]
+    public async Task<IActionResult> UpdateMySalesStatus(
+    Guid id,
+    [FromBody] UserStatus status,
+    CancellationToken ct)
+    {
+
+        var result = await mediator.Send(
+            new UpdateMySalesStatusCommand
+            {
+                SalesId = id,
+                Status = status
+            },
+            ct);
+
+
+
+        if (result.IsSuccess)
+        {
+            return Ok(new
+            {
+                Message = "Sales status updated successfully"
+            });
+        }
+
+
+        if (result.Error.Code == "SALES_NOT_FOUND")
         {
             return NotFound(result.Error);
         }

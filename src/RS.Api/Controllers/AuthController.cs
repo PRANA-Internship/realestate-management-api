@@ -35,6 +35,24 @@ namespace RS.Api.Controllers
             return BadRequest(result.Error);
         }
 
+        [Authorize(Roles = "MANAGER")]
+        [HttpPost("sales")]
+        public async Task<IActionResult> CreateSales(
+    CreateSalesCommand command,
+    CancellationToken ct)
+        {
+            var result = await mediator.Send(command, ct);
+
+            if (result.IsSuccess)
+            {
+                return Ok(new
+                {
+                    SalesId = result.Value
+                });
+            }
+
+            return BadRequest(result.Error);
+        }
 
         [HttpPost("register/buyer")]
         public async Task<IActionResult> RegisterBuyer([FromBody] RegisterBuyerCommand command, CancellationToken ct)
