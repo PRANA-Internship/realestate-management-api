@@ -6,7 +6,7 @@ using RS.Domain.Enums;
 
 namespace RS.Infrastructure.Authentication
 {
-    public class PermissionAuthorizationHandler(IPermissionProvider permissionProvider) 
+    public class PermissionAuthorizationHandler(IPermissionProvider permissionProvider)
         : AuthorizationHandler<PermissionRequirement>
     {
         protected override async Task HandleRequirementAsync(
