@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Reservations.Commands.CreateReservation;
+using RS.Application.Features.Reservations.Queries.GetActiveReservations;
 using RS.Application.Features.Reservations.Queries.GetMyReservations;
 using RS.Application.Features.Reservations.Queries.GetReservationById;
 
