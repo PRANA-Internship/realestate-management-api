@@ -81,8 +81,8 @@ public class ReservationsController(IMediator mediator) : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("active")]
-    public async Task<IActionResult> GetActiveReservations(
+    [HttpGet("sales/active")]
+    public async Task<IActionResult> GetAllReservationforSales(
     CancellationToken ct)
     {
         var result = await mediator.Send(

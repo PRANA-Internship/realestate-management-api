@@ -34,7 +34,7 @@ public interface IReservationRepository
 
     void Update(Reservation reservation);
 
-    Task<IReadOnlyList<Reservation>> GetActiveForManagerAsync(
+    Task<IReadOnlyList<Reservation>> GetAllReservationAsync(
     Guid managerId,
     CancellationToken ct);
 }

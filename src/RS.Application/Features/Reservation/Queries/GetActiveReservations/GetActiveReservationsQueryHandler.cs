@@ -45,7 +45,7 @@ public class GetActiveReservationsQueryHandler
         }
 
         var reservations =
-            await _reservationRepository.GetActiveForManagerAsync(
+            await _reservationRepository.GetAllReservationAsync(
                 sales.CreatedByUserId.Value,
                 ct);
 

@@ -90,7 +90,7 @@ public class ReservationRepository(RSDbContext dbContext)
         dbContext.Reservations.Update(reservation);
     }
 
-    public async Task<IReadOnlyList<Reservation>> GetActiveForManagerAsync(
+    public async Task<IReadOnlyList<Reservation>> GetAllReservationAsync(
     Guid managerId,
     CancellationToken ct)
     {
