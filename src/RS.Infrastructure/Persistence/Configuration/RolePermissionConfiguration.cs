@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RS.Domain.Entities;
-using RS.Domain.Enums;
 
 namespace RS.Infrastructure.Persistence.Configuration
 {
