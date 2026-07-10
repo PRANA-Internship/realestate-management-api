@@ -17,15 +17,14 @@ using RS.Application.Features.Properties.Queries.GetProperties;
 using RS.Application.Features.Properties.Queries.GetPropertyById;
 using RS.Application.Features.Properties.Queries.GetPublicProperties;
 using RS.Application.Features.Properties.Queries.GetPublicPropertyById;
-
+using RS.Domain.Enums;
+using RS.Infrastructure.Authentication;
 namespace RS.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class PropertiesController(IMediator mediator) : ControllerBase
 {
-
-
     [AllowAnonymous]
     [HttpGet("public")]
     public async Task<IActionResult> GetPublicProperties(
@@ -59,7 +58,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return NotFound(result.Error);
     }
-    [Authorize(Roles = "ADMIN,MANAGER")]
+    [HasPermission(Permission.PropertyCreate)]
     [HttpPost]
     public async Task<IActionResult> Create([FromForm] CreatePropertyCommand command, CancellationToken ct)
     {
@@ -71,7 +70,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(new { Error = result.Error });
     }
 
-    [Authorize(Roles = "ADMIN")]
+    [HasPermission(Permission.PropertyRead)]
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] GetPropertiesQuery query,
@@ -85,7 +84,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HasPermission(Permission.PropertyReadMy)]
     [HttpGet("my")]
     public async Task<IActionResult> GetMyProperties(
         [FromQuery] GetMyPropertiesQuery query,
@@ -99,7 +98,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [Authorize(Roles = "ADMIN,MANAGER")]
+    [HasPermission(Permission.PropertyRead)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(
         Guid id,
@@ -113,7 +112,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return NotFound(result.Error);
     }
 
-    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HasPermission(Permission.PropertyUpdate)]
     [HttpPut]
     public async Task<IActionResult> Update(
 
@@ -135,7 +134,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
     }
 
 
-    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HasPermission(Permission.PropertyDelete)]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
     Guid id,
@@ -154,7 +153,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
     }
 
 
-    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HasPermission(Permission.PropertyImageAdd)]
     [HttpPost("/images")]
     public async Task<IActionResult> AddImages(
 
@@ -173,7 +172,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HasPermission(Permission.PropertyImageDelete)]
     [HttpDelete("images/{imageId:guid}")]
     public async Task<IActionResult> DeleteImage(
         Guid imageId,
@@ -190,8 +189,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return BadRequest(result.Error);
     }
-
-    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HasPermission(Permission.PropertyImageSetPrimary)]
     [HttpPatch("images/{imageId:guid}/primary")]
     public async Task<IActionResult> SetPrimaryImage(
         Guid imageId,
@@ -208,8 +206,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return BadRequest(result.Error);
     }
-
-    [Authorize(Roles = "MANAGER,ADMIN")]
+    [HasPermission(Permission.PropertyActiveStateChange)]
     [HttpPatch("/active")]
     public async Task<IActionResult> ChangeActiveState(
 
