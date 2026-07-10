@@ -12,8 +12,8 @@ using RS.Infrastructure.Persistence;
 namespace RS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RSDbContext))]
-    [Migration("20260707192737_AddRolePermissions")]
-    partial class AddRolePermissions
+    [Migration("20260710094428_RemoveRolePermissionHasData")]
+    partial class RemoveRolePermissionHasData
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -185,108 +185,6 @@ namespace RS.Infrastructure.Persistence.Migrations
                     b.HasKey("Role", "PermissionName");
 
                     b.ToTable("RolePermissions");
-
-                    b.HasData(
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ReadProperties"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "CreateProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ReadMyProperties"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ReadProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "UpdateProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "DeleteProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "AddPropertyImages"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "DeletePropertyImage"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "SetPrimaryPropertyImage"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ChangePropertyActiveState"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ManageConfigurations"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "CreateProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "ReadMyProperties"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "ReadProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "UpdateProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "DeleteProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "AddPropertyImages"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "DeletePropertyImage"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "SetPrimaryPropertyImage"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "ChangePropertyActiveState"
-                        });
                 });
 
             modelBuilder.Entity("RS.Domain.Entities.SystemConfiguration", b =>
@@ -332,6 +230,9 @@ namespace RS.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -343,6 +244,12 @@ namespace RS.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(150)");
 
                     b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("PasswordResetExpiry")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PasswordResetToken")
                         .HasColumnType("text");
 
                     b.Property<string>("Phone")

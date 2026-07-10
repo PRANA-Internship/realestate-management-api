@@ -123,6 +123,7 @@ using (var scope = app.Services.CreateScope())
 
         await ConfigurationSeeder.SeedAsync(dbContext);
 
+        await PermissionSeeder.SeedAsync(dbContext);
         logger.LogInformation("Database migration completed successfully!");
     }
     catch (Exception ex)

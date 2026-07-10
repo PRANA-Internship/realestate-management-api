@@ -2,16 +2,18 @@ namespace RS.Domain.Enums
 {
     public enum Permission
     {
-        ReadProperties = 1,
-        CreateProperty = 2,
-        ReadMyProperties = 3,
-        ReadProperty = 4,
-        UpdateProperty = 5,
-        DeleteProperty = 6,
-        AddPropertyImages = 7,
-        DeletePropertyImage = 8,
-        SetPrimaryPropertyImage = 9,
-        ChangePropertyActiveState = 10,
-        ManageConfigurations = 11
+        PropertyList = 1,
+        PropertyRead = 2,
+        PropertyCreate = 3,
+        PropertyUpdate = 4,
+        PropertyDelete = 5,
+
+        PropertyReadMy = 6,
+        PropertyImageAdd = 7,
+        PropertyImageDelete = 8,
+        PropertyImageSetPrimary = 9,
+        PropertyActiveStateChange = 10,
+
+        ConfigurationManage = 11
     }
 }
