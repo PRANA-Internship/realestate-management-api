@@ -15,13 +15,11 @@ namespace RS.Infrastructure.Authentication
         {
             var roleClaim = context.User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (Enum.TryParse<UserRole>(roleClaim, true, out var role))
+            if ((Enum.TryParse<UserRole>(roleClaim, true, out var role) && (await permissionProvider.HasPermissionAsync(role, requirement.Permission))))
             {
-                if (await permissionProvider.HasPermissionAsync(role, requirement.Permission))
-                {
-                    context.Succeed(requirement);
-                }
+                context.Succeed(requirement);
             }
         }
     }
+
 }
