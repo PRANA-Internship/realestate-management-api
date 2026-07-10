@@ -13,6 +13,10 @@ namespace RS.Domain.Entities
         public UserRole Role { get; private set; } = UserRole.BUYER;
         public UserStatus Status { get; private set; } = UserStatus.ACTIVE;
 
+        public Guid? CreatedByUserId { get; private set; }
+
+        public string? PasswordResetToken { get; private set; }
+        public DateTime? PasswordResetExpiry { get; private set; }
         private User() { } // EF Core required
 
         public static User CreateBuyer(string fullName, string email, string phone, string passwordHash)
@@ -61,7 +65,39 @@ namespace RS.Domain.Entities
 
             PasswordHash = passwordHash;
             Status = UserStatus.ACTIVE;
+            PasswordResetToken = null;
+            PasswordResetExpiry = null;
+            UpdatedAt = DateTimeOffset.UtcNow;
+        }
+
+        public void SetCreatedBy(Guid createdByUserId)
+        {
+            CreatedByUserId = createdByUserId;
+            UpdatedAt = DateTimeOffset.UtcNow;
+        }
+
+        public void UpdateProfileSafe(string fullName, string phone)
+        {
+            FullName = fullName.Trim();
+            Phone = phone.Trim();
+            UpdatedAt = DateTimeOffset.UtcNow;
+        }
+
+        public string GeneratePasswordResetToken()
+        {
+            PasswordResetToken = Guid.NewGuid().ToString("N");
+            PasswordResetExpiry = DateTime.UtcNow.AddHours(24);
+
+            return PasswordResetToken;
+        }
+
+
+        public void SetStatus(UserStatus status)
+        {
+            Status = status;
             UpdatedAt = DateTimeOffset.UtcNow;
         }
     }
+
+
 }

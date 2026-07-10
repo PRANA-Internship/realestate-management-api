@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RS.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using RS.Infrastructure.Persistence;
 namespace RS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RSDbContext))]
-    partial class RSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260706183235_AddFieldtoUserEntity")]
+    partial class AddFieldtoUserEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,54 +24,6 @@ namespace RS.Infrastructure.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("RS.Domain.Entities.Payment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
-
-                    b.Property<string>("ChapaReference")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
-                    b.Property<Guid>("ReservationId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
-                    b.Property<string>("TxRef")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReservationId");
-
-                    b.HasIndex("TxRef")
-                        .IsUnique();
-
-                    b.ToTable("Payments");
-                });
 
             modelBuilder.Entity("RS.Domain.Entities.Property", b =>
                 {
@@ -217,123 +172,6 @@ namespace RS.Infrastructure.Persistence.Migrations
                     b.ToTable("Reservations");
                 });
 
-            modelBuilder.Entity("RS.Domain.Entities.RolePermission", b =>
-                {
-                    b.Property<string>("Role")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("PermissionName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Role", "PermissionName");
-
-                    b.ToTable("RolePermissions");
-
-                    b.HasData(
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ReadProperties"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "CreateProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ReadMyProperties"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ReadProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "UpdateProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "DeleteProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "AddPropertyImages"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "DeletePropertyImage"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "SetPrimaryPropertyImage"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ChangePropertyActiveState"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ManageConfigurations"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "CreateProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "ReadMyProperties"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "ReadProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "UpdateProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "DeleteProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "AddPropertyImages"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "DeletePropertyImage"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "SetPrimaryPropertyImage"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "ChangePropertyActiveState"
-                        });
-                });
-
             modelBuilder.Entity("RS.Domain.Entities.SystemConfiguration", b =>
                 {
                     b.Property<Guid>("Id")
@@ -421,17 +259,6 @@ namespace RS.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("RS.Domain.Entities.Payment", b =>
-                {
-                    b.HasOne("RS.Domain.Entities.Reservation", "Reservation")
-                        .WithMany()
-                        .HasForeignKey("ReservationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("RS.Domain.Entities.PropertyImage", b =>

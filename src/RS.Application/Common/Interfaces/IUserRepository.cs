@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using RS.Domain.Entities;
+using RS.Domain.Enums;
 
 namespace RS.Application.Common.Interfaces
 {
@@ -12,5 +13,28 @@ namespace RS.Application.Common.Interfaces
         Task<bool> ExistsByEmailAsync(string email, CancellationToken ct = default);
         Task AddAsync(User user, CancellationToken ct = default);
         Task UpdateAsync(User user, CancellationToken ct = default);
+
+        Task<User?> GetByResetTokenAsync(string token, CancellationToken ct = default);
+
+        Task<IReadOnlyList<User>> GetUsersAsync(
+        UserRole? role,
+        UserStatus? status,
+        string? search,
+        CancellationToken ct = default);
+
+        Task<User?> GetByIdWithDetailsAsync(
+            Guid id,
+            CancellationToken ct = default);
+
+        Task<IReadOnlyCollection<User>> GetSalesByManagerAsync(
+        Guid managerId,
+        CancellationToken ct = default);
+
+        Task<User?> GetSalesByManagerAndIdAsync(
+            Guid managerId,
+            Guid salesId,
+            CancellationToken ct = default);
+
+
     }
 }
