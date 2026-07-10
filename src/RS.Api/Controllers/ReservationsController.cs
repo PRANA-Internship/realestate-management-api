@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Reservations.Commands.CreateReservation;
+using RS.Application.Features.Reservations.Queries.GetActiveReservations;
 using RS.Application.Features.Reservations.Queries.GetMyReservations;
 using RS.Application.Features.Reservations.Queries.GetReservationById;
 
@@ -75,6 +76,21 @@ public class ReservationsController(IMediator mediator) : ControllerBase
         {
             return Forbid();
         }
+
+        return BadRequest(result.Error);
+    }
+
+    [Authorize]
+    [HttpGet("sales/active")]
+    public async Task<IActionResult> GetAllReservationforSales(
+    CancellationToken ct)
+    {
+        var result = await mediator.Send(
+            new GetActiveReservationsQuery(),
+            ct);
+
+        if (result.IsSuccess)
+            return Ok(result.Value);
 
         return BadRequest(result.Error);
     }
