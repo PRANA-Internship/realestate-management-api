@@ -203,4 +203,16 @@ public class PropertyRepository : IPropertyRepository
                     x.Status == PropertyStatus.Available,
                 ct);
     }
+
+    public async Task<IReadOnlyList<Property>> GetAvailableForSalesAsync(
+    Guid managerId,
+    CancellationToken ct)
+    {
+        return await _dbContext.Properties
+            .Where(x =>
+                x.CreatedByUserId == managerId &&
+                x.IsActive)
+            .Include(x => x.Images)
+            .ToListAsync(ct);
+    }
 }
