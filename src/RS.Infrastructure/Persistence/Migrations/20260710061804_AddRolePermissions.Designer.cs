@@ -12,7 +12,7 @@ using RS.Infrastructure.Persistence;
 namespace RS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RSDbContext))]
-    [Migration("20260707192737_AddRolePermissions")]
+    [Migration("20260710061804_AddRolePermissions")]
     partial class AddRolePermissions
     {
         /// <inheritdoc />
@@ -185,108 +185,6 @@ namespace RS.Infrastructure.Persistence.Migrations
                     b.HasKey("Role", "PermissionName");
 
                     b.ToTable("RolePermissions");
-
-                    b.HasData(
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ReadProperties"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "CreateProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ReadMyProperties"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ReadProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "UpdateProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "DeleteProperty"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "AddPropertyImages"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "DeletePropertyImage"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "SetPrimaryPropertyImage"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ChangePropertyActiveState"
-                        },
-                        new
-                        {
-                            Role = "ADMIN",
-                            PermissionName = "ManageConfigurations"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "CreateProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "ReadMyProperties"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "ReadProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "UpdateProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "DeleteProperty"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "AddPropertyImages"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "DeletePropertyImage"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "SetPrimaryPropertyImage"
-                        },
-                        new
-                        {
-                            Role = "MANAGER",
-                            PermissionName = "ChangePropertyActiveState"
-                        });
                 });
 
             modelBuilder.Entity("RS.Domain.Entities.SystemConfiguration", b =>

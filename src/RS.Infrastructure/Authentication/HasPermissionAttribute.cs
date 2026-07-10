@@ -5,7 +5,8 @@ namespace RS.Infrastructure.Authentication
 {
     public class HasPermissionAttribute : AuthorizeAttribute
     {
-        public HasPermissionAttribute(Permission permission) : base(policy: permission.ToString())
+        public HasPermissionAttribute(Entity entity, Permission permission)
+            : base(policy: PermissionName.Of(entity, permission))
         {
         }
     }
