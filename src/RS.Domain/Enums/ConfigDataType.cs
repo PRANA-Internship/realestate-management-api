@@ -6,9 +6,9 @@ namespace RS.Domain.Enums
 {
     public enum ConfigDataType
     {
-        String,
-        Integer,
-        Decimal,
-        Boolean
+        String = 0,
+        Integer = 1,
+        Decimal = 2,
+        Boolean = 3
     }
 }
