@@ -33,4 +33,8 @@ public interface IReservationRepository
         CancellationToken ct = default);
 
     void Update(Reservation reservation);
+
+    Task<IReadOnlyList<Reservation>> GetAllReservationAsync(
+    Guid managerId,
+    CancellationToken ct);
 }
