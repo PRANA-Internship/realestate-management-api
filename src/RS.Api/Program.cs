@@ -13,6 +13,7 @@ using RS.API.Middleware;
 using RS.Application.Common.Interfaces;
 using RS.Infrastructure.Authentication;
 using RS.Infrastructure.Persistence;
+using RS.Infrastructure.Persistence.Configuration;
 using RS.Infrastructure.Persistence.Repositories;
 using RS.Infrastructure.Services;
 using UMS.Application.Common.Behaviours;
@@ -125,6 +126,7 @@ using (var scope = app.Services.CreateScope())
         await DatabaseSeeder.SeedAsync(dbContext, configuration);
 
         await ConfigurationSeeder.SeedAsync(dbContext);
+        await RolePermissionSeeder.SeedAsync(dbContext);   // add this line
 
         logger.LogInformation("Database migration completed successfully!");
     }
@@ -137,7 +139,6 @@ using (var scope = app.Services.CreateScope())
 
     }
 }
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
