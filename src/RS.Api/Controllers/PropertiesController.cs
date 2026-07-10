@@ -11,6 +11,7 @@ using RS.Application.Features.Properties.Commands.DeleteProperty;
 using RS.Application.Features.Properties.Commands.DeletePropertyImage;
 using RS.Application.Features.Properties.Commands.SetPrimaryPropertyImage;
 using RS.Application.Features.Properties.Commands.UpdateProperty;
+using RS.Application.Features.Properties.Queries.GetAvailableProperties;
 using RS.Application.Features.Properties.Queries.GetMyProperties;
 using RS.Application.Features.Properties.Queries.GetProperties;
 using RS.Application.Features.Properties.Queries.GetPropertyById;
@@ -223,6 +224,24 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         {
             return NoContent();
         }
+
+        return BadRequest(result.Error);
+    }
+
+    [Authorize(Roles = "SALES")]
+    [HttpGet("sales/available")]
+    public async Task<IActionResult> GetAvailable(
+    CancellationToken ct)
+    {
+
+        var result = await mediator.Send(
+            new GetAvailablePropertiesQuery(),
+            ct);
+
+
+        if (result.IsSuccess)
+            return Ok(result.Value);
+
 
         return BadRequest(result.Error);
     }
