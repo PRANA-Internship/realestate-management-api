@@ -34,15 +34,6 @@ public class GetAvailablePropertiesQueryHandler
         CancellationToken ct)
     {
 
-        if (_userContext.Role != UserRole.SALES)
-        {
-            return Result<IReadOnlyList<PropertyResponse>>
-                .Failure(
-                new Error(
-                    "FORBIDDEN",
-                    "Only sales can access available properties."));
-        }
-
 
         var sales = await _userRepository
             .GetByIdAsync(
