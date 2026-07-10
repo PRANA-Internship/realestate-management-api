@@ -10,7 +10,7 @@ public static class ConfigurationSeeder
     {
         var currentConfigurations = new List<SystemConfiguration>
 {
-   
+
     new()
     {
         Key = "Reservation.Enabled",
@@ -60,7 +60,7 @@ public static class ConfigurationSeeder
         Description = "Interval in seconds used to check and expire unpaid reservations."
     },
 
-    
+
     new()
     {
         Key = "Property.MaxImages",
@@ -86,7 +86,7 @@ public static class ConfigurationSeeder
         Description = "Allow property deactivation"
     },
 
-   
+
     new()
     {
         Key = "Payment.MaximumRetries",
@@ -104,7 +104,7 @@ public static class ConfigurationSeeder
         Description = "Payment timeout in minutes"
     },
 
- 
+
     new()
     {
         Key = "User.RequireEmailVerification",
@@ -122,7 +122,7 @@ public static class ConfigurationSeeder
         Description = "Password reset expiry time"
     },
 
-   
+
     new()
     {
         Key = "Email.SendWelcome",
@@ -178,7 +178,7 @@ public static class ConfigurationSeeder
                     updated = true;
                 }
 
-             
+
 
                 if (updated)
                 {

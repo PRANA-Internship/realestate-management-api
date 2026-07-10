@@ -4,7 +4,8 @@ using System.Text;
 
 namespace RS.Domain.Enums
 {
-    public enum ConfigDataType {
+    public enum ConfigDataType
+    {
         String,
         Integer,
         Decimal,

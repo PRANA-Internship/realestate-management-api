@@ -5,6 +5,6 @@ public record ConfigurationResponse(
     string Key,
     string Value,
     string? Description,
-    string DataType,      
+    string DataType,
     string DefaultValue
 );
