@@ -36,7 +36,10 @@ public class GetConfigurationByKeyQueryHandler
             configuration.Id,
             configuration.Key,
             configuration.Value,
-            configuration.Description);
+            configuration.Description,
+            configuration.DataType.ToString(),
+            configuration.DefaultValue
+            );
 
         return Result<ConfigurationResponse>.Success(response);
     }

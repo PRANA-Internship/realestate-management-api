@@ -29,7 +29,9 @@ public class GetConfigurationsQueryHandler
                 configuration.Id,
                 configuration.Key,
                 configuration.Value,
-                configuration.Description))
+                configuration.Description,
+                configuration.DataType.ToString(),
+                configuration.DefaultValue))
             .ToList();
 
         return Result<IReadOnlyList<ConfigurationResponse>>
