@@ -4,5 +4,7 @@ public record ConfigurationResponse(
     Guid Id,
     string Key,
     string Value,
-    string? Description
+    string? Description,
+    string DataType,
+    string DefaultValue
 );
