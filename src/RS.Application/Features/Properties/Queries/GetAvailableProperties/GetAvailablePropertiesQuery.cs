@@ -5,6 +5,6 @@ using RS.Domain.Common;
 namespace RS.Application.Features.Properties.Queries.GetAvailableProperties;
 
 public class GetAvailablePropertiesQuery
-    : IRequest<Result<IReadOnlyList<PropertyResponse>>>
+    : IRequest<Result<PaginatedResult<PropertyResponse>>>
 {
 }

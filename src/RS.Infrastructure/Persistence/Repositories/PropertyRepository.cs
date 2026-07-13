@@ -20,7 +20,7 @@ public class PropertyRepository : IPropertyRepository
 
     }
 
-    public async Task<List<Property>> GetAllAsync(
+    public async Task<PaginatedResult<Property>> GetAllAsync(
      string? city,
      decimal? minPrice,
      decimal? maxPrice,
@@ -54,27 +54,46 @@ public class PropertyRepository : IPropertyRepository
             query = query.Where(x => x.Type == parsedType);
         }
 
-        query = query
+        var totalItems = await query.CountAsync(ct);
+
+        var properties = await query
             .OrderByDescending(x => x.CreatedAt)
             .Skip((page - 1) * pageSize)
-            .Take(pageSize);
+            .Take(pageSize)
+            .ToListAsync(ct);
 
-        return await query.ToListAsync(ct);
+        return new PaginatedResult<Property>(
+            properties,
+            new PaginationMetadata(
+                page,
+                pageSize,
+                totalItems));
     }
 
-    public async Task<List<Property>> GetMyPropertiesAsync(
-    Guid userId,
-    int page,
-    int pageSize,
-    CancellationToken ct = default)
+    public async Task<PaginatedResult<Property>> GetMyPropertiesAsync(
+       Guid userId,
+       int page,
+       int pageSize,
+       CancellationToken ct = default)
     {
-        return await _dbContext.Properties
+        var query = _dbContext.Properties
             .Include(p => p.Images)
-            .Where(p => p.CreatedByUserId == userId)
+            .Where(p => p.CreatedByUserId == userId);
+
+        var totalItems = await query.CountAsync(ct);
+
+        var properties = await query
             .OrderByDescending(p => p.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(ct);
+
+        return new PaginatedResult<Property>(
+            properties,
+            new PaginationMetadata(
+                page,
+                pageSize,
+                totalItems));
     }
 
     public async Task<Property?> GetByIdAsync(
@@ -141,7 +160,7 @@ public class PropertyRepository : IPropertyRepository
             .FirstOrDefaultAsync(ct);
     }
 
-    public async Task<List<Property>> GetPublicPropertiesAsync(
+    public async Task<PaginatedResult<Property>> GetPublicPropertiesAsync(
     string? city,
     decimal? minPrice,
     decimal? maxPrice,
@@ -174,20 +193,25 @@ public class PropertyRepository : IPropertyRepository
         }
 
         if (!string.IsNullOrWhiteSpace(type) &&
-            Enum.TryParse<PropertyType>(
-                type,
-                true,
-                out var propertyType))
+            Enum.TryParse<PropertyType>(type, true, out var propertyType))
         {
-            query = query.Where(x =>
-                x.Type == propertyType);
+            query = query.Where(x => x.Type == propertyType);
         }
 
-        return await query
+        var totalItems = await query.CountAsync(ct);
+
+        var properties = await query
             .OrderByDescending(x => x.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(ct);
+
+        return new PaginatedResult<Property>(
+            properties,
+            new PaginationMetadata(
+                page,
+                pageSize,
+                totalItems));
     }
 
     public async Task<Property?> GetPublicPropertyByIdAsync(
@@ -204,15 +228,31 @@ public class PropertyRepository : IPropertyRepository
                 ct);
     }
 
-    public async Task<IReadOnlyList<Property>> GetAvailableForSalesAsync(
-    Guid managerId,
-    CancellationToken ct)
+    public async Task<PaginatedResult<Property>> GetAvailableForSalesAsync(
+     Guid managerId,
+     int page,
+     int pageSize,
+     CancellationToken ct)
     {
-        return await _dbContext.Properties
+        var query = _dbContext.Properties
+            .Include(x => x.Images)
             .Where(x =>
                 x.CreatedByUserId == managerId &&
-                x.IsActive)
-            .Include(x => x.Images)
+                x.IsActive);
+
+        var totalItems = await query.CountAsync(ct);
+
+        var properties = await query
+            .OrderByDescending(x => x.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(ct);
+
+        return new PaginatedResult<Property>(
+            properties,
+            new PaginationMetadata(
+                page,
+                pageSize,
+                totalItems));
     }
 }
