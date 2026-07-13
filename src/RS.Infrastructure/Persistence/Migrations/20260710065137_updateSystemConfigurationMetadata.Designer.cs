@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RS.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using RS.Infrastructure.Persistence;
 namespace RS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RSDbContext))]
-    partial class RSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260710065137_updateSystemConfigurationMetadata")]
+    partial class updateSystemConfigurationMetadata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,21 +170,6 @@ namespace RS.Infrastructure.Persistence.Migrations
                     b.HasIndex("PropertyId");
 
                     b.ToTable("Reservations");
-                });
-
-            modelBuilder.Entity("RS.Domain.Entities.RolePermission", b =>
-                {
-                    b.Property<string>("Role")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<string>("PermissionName")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Role", "PermissionName");
-
-                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("RS.Domain.Entities.SystemConfiguration", b =>
