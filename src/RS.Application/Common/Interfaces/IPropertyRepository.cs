@@ -5,7 +5,7 @@ namespace RS.Application.Common.Interfaces;
 public interface IPropertyRepository
 {
     Task AddAsync(Property property, CancellationToken ct = default);
-    Task<List<Property>> GetAllAsync(
+    Task<PaginatedResult<Property>> GetAllAsync(
         string? city,
         decimal? minPrice,
         decimal? maxPrice,
@@ -15,7 +15,7 @@ public interface IPropertyRepository
         CancellationToken ct = default);
 
 
-    Task<List<Property>> GetMyPropertiesAsync(
+    Task<PaginatedResult<Property>> GetMyPropertiesAsync(
     Guid userId,
     int page,
     int pageSize,
@@ -41,7 +41,7 @@ public interface IPropertyRepository
 
     Task<Property?> GetPropertyForUpdateAsync(Guid propertyId, CancellationToken ct = default);
 
-    Task<List<Property>> GetPublicPropertiesAsync(
+    Task<PaginatedResult<Property>> GetPublicPropertiesAsync(
    string? city,
    decimal? minPrice,
    decimal? maxPrice,
@@ -54,7 +54,9 @@ public interface IPropertyRepository
         Guid propertyId,
         CancellationToken ct = default);
 
-    Task<IReadOnlyList<Property>> GetAvailableForSalesAsync(
+    Task<PaginatedResult<Property>> GetAvailableForSalesAsync(
     Guid managerId,
+    int page,
+    int pageSize,
     CancellationToken ct);
 }

@@ -11,4 +11,4 @@ public record GetPublicPropertiesQuery(
     string? Type,
     int Page = 1,
     int PageSize = 10)
-    : IRequest<Result<IReadOnlyCollection<PublicPropertyResponse>>>;
+    : IRequest<Result<PaginatedResult<PublicPropertyResponse>>>;

@@ -29,7 +29,7 @@ public class GetMyPropertiesQueryHandler
             request.PageSize,
             ct);
 
-        var response = properties
+        var response = properties.Data
             .Select(property => new PropertySummaryResponse(
                 property.Id,
                 property.Title,

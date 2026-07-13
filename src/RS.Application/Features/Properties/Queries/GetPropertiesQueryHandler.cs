@@ -6,7 +6,7 @@ using RS.Domain.Common;
 namespace RS.Application.Features.Properties.Queries.GetProperties;
 
 public class GetPropertiesQueryHandler
-    : IRequestHandler<GetPropertiesQuery, Result<List<PropertyResponse>>>
+    : IRequestHandler<GetPropertiesQuery, Result<PaginatedResult<PropertyResponse>>>
 {
     private readonly IPropertyRepository _propertyRepository;
 
@@ -15,7 +15,7 @@ public class GetPropertiesQueryHandler
         _propertyRepository = propertyRepository;
     }
 
-    public async Task<Result<List<PropertyResponse>>> Handle(
+    public async Task<Result<PaginatedResult<PropertyResponse>>> Handle(
         GetPropertiesQuery request,
         CancellationToken ct)
     {
@@ -27,7 +27,7 @@ public class GetPropertiesQueryHandler
             request.Page,
             request.PageSize,
             ct);
-        var result = properties.Select(p => new PropertyResponse(
+        var result = properties.Data.Select(p => new PropertyResponse(
             p.Id,
             p.Title,
             p.Description,
@@ -48,6 +48,6 @@ public class GetPropertiesQueryHandler
             )).ToList()
         )).ToList();
 
-        return Result<List<PropertyResponse>>.Success(result);
+        return Result<PaginatedResult<PropertyResponse>>.Success(new PaginatedResult<PropertyResponse>(result, properties.Meta));
     }
 }
