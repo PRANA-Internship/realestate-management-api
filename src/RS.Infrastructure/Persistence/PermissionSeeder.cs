@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using RS.Domain.Entities;
 using RS.Domain.Enums;
@@ -22,7 +23,7 @@ namespace RS.Infrastructure.Persistence
                 rolePermissions.Add(new RolePermission
                 {
                     Role = UserRole.ADMIN,
-                    PermissionName = permission.ToString()
+                    PermissionName = ToEntityAction(permission.ToString())
                 });
             }
 
@@ -44,12 +45,15 @@ namespace RS.Infrastructure.Persistence
                 rolePermissions.Add(new RolePermission
                 {
                     Role = UserRole.MANAGER,
-                    PermissionName = permission.ToString()
+                    PermissionName = ToEntityAction(permission.ToString())
                 });
             }
 
             await context.RolePermissions.AddRangeAsync(rolePermissions);
             await context.SaveChangesAsync();
         }
+
+        private static string ToEntityAction(string permissionName) =>
+            Regex.Replace(permissionName, "(?<=[a-z])(?=[A-Z])", ":");
     }
 }

@@ -12,8 +12,8 @@ using RS.Infrastructure.Persistence;
 namespace RS.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RSDbContext))]
-    [Migration("20260710094428_RemoveRolePermissionHasData")]
-    partial class RemoveRolePermissionHasData
+    [Migration("20260710123601_addRolePermissionEntity")]
+    partial class addRolePermissionEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
