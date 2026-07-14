@@ -11,4 +11,4 @@ public sealed record GetPropertiesQuery(
     string? Type,
     int Page = 1,
     int PageSize = 10
-) : IRequest<Result<List<PropertyResponse>>>;
+) : IRequest<Result<PaginatedResult<PropertyResponse>>>;

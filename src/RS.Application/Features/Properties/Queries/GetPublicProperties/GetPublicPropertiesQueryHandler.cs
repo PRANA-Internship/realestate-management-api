@@ -6,7 +6,7 @@ using RS.Domain.Common;
 namespace RS.Application.Features.Properties.Queries.GetPublicProperties;
 
 public class GetPublicPropertiesQueryHandler
-    : IRequestHandler<GetPublicPropertiesQuery, Result<IReadOnlyCollection<PublicPropertyResponse>>>
+    : IRequestHandler<GetPublicPropertiesQuery, Result<PaginatedResult<PublicPropertyResponse>>>
 {
     private readonly IPropertyRepository _propertyRepository;
     private readonly IConfigurationService _configurationService;
@@ -19,7 +19,7 @@ public class GetPublicPropertiesQueryHandler
         _configurationService = configurationService;
     }
 
-    public async Task<Result<IReadOnlyCollection<PublicPropertyResponse>>> Handle(
+    public async Task<Result<PaginatedResult<PublicPropertyResponse>>> Handle(
         GetPublicPropertiesQuery request,
         CancellationToken ct)
     {
@@ -36,7 +36,7 @@ public class GetPublicPropertiesQueryHandler
             request.PageSize,
             ct);
 
-        var response = properties
+        var response = properties.Data
             .Select(property => new PublicPropertyResponse(
                 property.Id,
                 property.Title,
@@ -49,7 +49,7 @@ public class GetPublicPropertiesQueryHandler
                     ?.ImageUrl))
             .ToList();
 
-        return Result<IReadOnlyCollection<PublicPropertyResponse>>
-            .Success(response);
+        return Result<PaginatedResult<PublicPropertyResponse>>
+            .Success(new PaginatedResult<PublicPropertyResponse>(response, properties.Meta));
     }
 }

@@ -9,5 +9,7 @@ namespace RS.Application.Features.Users.Queries.GetUsers;
 public record GetUsersQuery(
     UserRole? Role,
     UserStatus? Status,
-    string? Search
-) : IRequest<Result<IReadOnlyCollection<UserResponse>>>;
+    string? Search,
+    int Page = 1,
+    int PageSize = 10
+) : IRequest<Result<PaginatedResult<UserResponse>>>;

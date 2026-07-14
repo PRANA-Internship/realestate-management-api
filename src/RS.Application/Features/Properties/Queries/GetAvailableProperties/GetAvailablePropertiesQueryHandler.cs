@@ -9,7 +9,7 @@ namespace RS.Application.Features.Properties.Queries.GetAvailableProperties;
 
 public class GetAvailablePropertiesQueryHandler
     : IRequestHandler<GetAvailablePropertiesQuery,
-        Result<IReadOnlyList<PropertyResponse>>>
+        Result<PaginatedResult<PropertyResponse>>>
 {
 
     private readonly IUserContext _userContext;
@@ -29,7 +29,7 @@ public class GetAvailablePropertiesQueryHandler
 
 
 
-    public async Task<Result<IReadOnlyList<PropertyResponse>>> Handle(
+    public async Task<Result<PaginatedResult<PropertyResponse>>> Handle(
         GetAvailablePropertiesQuery request,
         CancellationToken ct)
     {
@@ -43,7 +43,7 @@ public class GetAvailablePropertiesQueryHandler
 
         if (sales == null || sales.CreatedByUserId == null)
         {
-            return Result<IReadOnlyList<PropertyResponse>>
+            return Result<PaginatedResult<PropertyResponse>>
                 .Failure(
                 new Error(
                     "MANAGER_NOT_FOUND",
@@ -55,11 +55,12 @@ public class GetAvailablePropertiesQueryHandler
             await _propertyRepository
                 .GetAvailableForSalesAsync(
                     sales.CreatedByUserId.Value,
+                    1, 10,
                     ct);
 
 
 
-        var response = properties
+        var response = properties.Data
             .Select(x => new PropertyResponse(
                 x.Id,
                 x.Title,
@@ -85,7 +86,7 @@ public class GetAvailablePropertiesQueryHandler
 
 
 
-        return Result<IReadOnlyList<PropertyResponse>>
-            .Success(response);
+        return Result<PaginatedResult<PropertyResponse>>
+            .Success(new PaginatedResult<PropertyResponse>(response, properties.Meta));
     }
 }
