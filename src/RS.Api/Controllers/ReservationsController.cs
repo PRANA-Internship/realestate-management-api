@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RS.Application.Features.Reservations.Commands.CreateReservation;
 using RS.Application.Features.Reservations.Queries.GetActiveReservations;
+using RS.Application.Features.Reservations.Queries.GetManagedPropertyReservation;
 using RS.Application.Features.Reservations.Queries.GetMyReservations;
 using RS.Application.Features.Reservations.Queries.GetReservationById;
 
@@ -76,6 +77,20 @@ public class ReservationsController(IMediator mediator) : ControllerBase
         {
             return Forbid();
         }
+
+        return BadRequest(result.Error);
+    }
+
+    [Authorize(Roles = "MANAGER")]
+    [HttpGet("managed-properties")]
+    public async Task<IActionResult> GetManagedPropertyReservations(
+    [FromQuery] GetManagedPropertyReservationsQuery query,
+    CancellationToken ct)
+    {
+        var result = await mediator.Send(query, ct);
+
+        if (result.IsSuccess)
+            return Ok(result.Value);
 
         return BadRequest(result.Error);
     }
