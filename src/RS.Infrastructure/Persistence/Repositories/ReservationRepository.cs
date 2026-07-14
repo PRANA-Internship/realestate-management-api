@@ -102,4 +102,41 @@ public class ReservationRepository(RSDbContext dbContext)
             .OrderByDescending(r => r.ReservedAt)
             .ToListAsync(ct);
     }
+
+    public async Task<PaginatedResult<Reservation>> GetManagedPropertyReservationsAsync(Guid managerId, ReservationStatus? status,
+        string? search,
+        int page,
+        int pageSize,
+        CancellationToken ct = default)
+    {
+
+        var query = dbContext.Reservations.Include(x => x.Property)
+            .Where(x => x.Property.CreatedByUserId == managerId).AsQueryable();
+
+        if (status is ReservationStatus statusValue)
+        {
+            query = query.Where(x => x.Status == statusValue);
+        }
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+
+            query = query.Where(x =>
+            x.BuyerFullName.ToLower().Contains(search) ||
+            x.BuyerEmail.ToLower().Contains(search) ||
+            x.BuyerPhoneNumber.Contains(search));
+        }
+
+        var totalItems = await query.CountAsync(ct);
+
+        var reservations = await query.OrderByDescending(x => x.ReservedAt).Skip((page - 1) * pageSize)
+            .Take(pageSize).ToListAsync(ct);
+
+        return new PaginatedResult<Reservation>(reservations, new PaginationMetadata(
+            page,
+            pageSize,
+            totalItems));
+
+
+    }
 }
