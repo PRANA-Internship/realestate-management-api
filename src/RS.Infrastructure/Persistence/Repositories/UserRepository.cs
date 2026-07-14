@@ -44,23 +44,23 @@ namespace RS.Infrastructure.Persistence.Repositories
         }
 
         public async Task<PaginatedResult<User>> GetUsersAsync(
-      UserRole? role,
-      UserStatus? status,
-      string? search,
-      int page,
-      int pageSize,
-      CancellationToken ct = default)
+             UserRole? role,
+             UserStatus? status,
+             string? search,
+             int page,
+             int pageSize,
+             CancellationToken ct = default)
         {
             IQueryable<User> query = dbContext.Users;
 
-            if (role.HasValue)
+            if (role is UserRole roleValue)
             {
-                query = query.Where(x => x.Role == role.Value);
+                query = query.Where(x => x.Role == roleValue);
             }
 
-            if (status.HasValue)
+            if (status is UserStatus statusValue)
             {
-                query = query.Where(x => x.Status == status.Value);
+                query = query.Where(x => x.Status == statusValue);
             }
 
             if (!string.IsNullOrWhiteSpace(search))
