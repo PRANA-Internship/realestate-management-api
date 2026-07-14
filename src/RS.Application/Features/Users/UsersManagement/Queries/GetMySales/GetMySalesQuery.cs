@@ -5,5 +5,5 @@ using RS.Domain.Common;
 
 namespace RS.Application.Features.Users.Queries.GetMySales;
 
-public record GetMySalesQuery
-    : IRequest<Result<IReadOnlyCollection<UserResponse>>>;
+public record GetMySalesQuery(int Page = 1, int PageSize = 10)
+    : IRequest<Result<PaginatedResult<UserResponse>>>;

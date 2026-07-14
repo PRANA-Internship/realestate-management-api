@@ -1,3 +1,4 @@
+using System.Text;
 using MediatR;
 using RS.Application.Common.Interfaces;
 using RS.Contracts.Users;
@@ -8,7 +9,7 @@ namespace RS.Application.Features.Users.Queries.GetMySales;
 
 public class GetMySalesQueryHandler
     : IRequestHandler<GetMySalesQuery,
-        Result<IReadOnlyCollection<UserResponse>>>
+        Result<PaginatedResult<UserResponse>>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUserContext _userContext;
@@ -23,14 +24,14 @@ public class GetMySalesQueryHandler
     }
 
 
-    public async Task<Result<IReadOnlyCollection<UserResponse>>> Handle(
+    public async Task<Result<PaginatedResult<UserResponse>>> Handle(
         GetMySalesQuery request,
         CancellationToken ct)
     {
 
         if (_userContext.Role != UserRole.MANAGER)
         {
-            return Result<IReadOnlyCollection<UserResponse>>
+            return Result<PaginatedResult<UserResponse>>
                 .Failure(
                 new Error(
                     "FORBIDDEN",
@@ -41,10 +42,11 @@ public class GetMySalesQueryHandler
         var sales =
             await _userRepository.GetSalesByManagerAsync(
                 _userContext.UserId,
+                request.Page, request.PageSize,
                 ct);
 
 
-        var response = sales
+        var response = sales.Data
             .Select(x => new UserResponse(
                 x.Id,
                 x.FullName,
@@ -56,7 +58,7 @@ public class GetMySalesQueryHandler
             .ToList();
 
 
-        return Result<IReadOnlyCollection<UserResponse>>
-            .Success(response);
+        return Result<PaginatedResult<UserResponse>>
+            .Success(new PaginatedResult<UserResponse>(response, sales.Meta));
     }
 }

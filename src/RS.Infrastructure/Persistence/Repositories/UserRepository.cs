@@ -43,23 +43,23 @@ namespace RS.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(x => x.PasswordResetToken == token, ct);
         }
 
-        public async Task<IReadOnlyList<User>> GetUsersAsync(
-      UserRole? role,
-      UserStatus? status,
-      string? search,
-      CancellationToken ct = default)
+        public async Task<PaginatedResult<User>> GetUsersAsync(
+             UserRole? role,
+             UserStatus? status,
+             string? search,
+             int page,
+             int pageSize,
+             CancellationToken ct = default)
         {
             IQueryable<User> query = dbContext.Users;
 
-            if (role.HasValue)
+            if (role is UserRole roleValue)
             {
-                var roleValue = role.Value;
                 query = query.Where(x => x.Role == roleValue);
             }
 
-            if (status.HasValue)
+            if (status is UserStatus statusValue)
             {
-                var statusValue = status.Value;
                 query = query.Where(x => x.Status == statusValue);
             }
 
@@ -72,9 +72,20 @@ namespace RS.Infrastructure.Persistence.Repositories
                     x.Email.ToLower().Contains(search));
             }
 
-            return await query
+            var totalItems = await query.CountAsync(ct);
+
+            var users = await query
                 .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync(ct);
+
+            return new PaginatedResult<User>(
+                users,
+                new PaginationMetadata(
+                    page,
+                    pageSize,
+                    totalItems));
         }
 
         public async Task<User?> GetByIdWithDetailsAsync(
@@ -85,16 +96,31 @@ namespace RS.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id, ct);
         }
 
-        public async Task<IReadOnlyCollection<User>> GetSalesByManagerAsync(
-    Guid managerId,
-    CancellationToken ct = default)
+        public async Task<PaginatedResult<User>> GetSalesByManagerAsync(
+           Guid managerId,
+           int page,
+           int pageSize,
+           CancellationToken ct = default)
         {
-            return await dbContext.Users
+            var query = dbContext.Users
                 .Where(x =>
                     x.Role == UserRole.SALES &&
-                    x.CreatedByUserId == managerId)
+                    x.CreatedByUserId == managerId);
+
+            var totalItems = await query.CountAsync(ct);
+
+            var users = await query
                 .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync(ct);
+
+            return new PaginatedResult<User>(
+                users,
+                new PaginationMetadata(
+                    page,
+                    pageSize,
+                    totalItems));
         }
 
 
