@@ -25,14 +25,19 @@ public class UsersController(IMediator mediator) : ControllerBase
         [FromQuery] UserRole? role,
         [FromQuery] UserStatus? status,
         [FromQuery] string? search,
-        CancellationToken ct)
+        CancellationToken ct,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10
+        )
     {
 
         var result = await mediator.Send(
             new GetUsersQuery(
                 role,
                 status,
-                search),
+                search,
+                page,
+                pageSize),
             ct);
 
 
@@ -150,11 +155,12 @@ public class UsersController(IMediator mediator) : ControllerBase
 
     [Authorize(Roles = "MANAGER")]
     [HttpGet("my-sales")]
-    public async Task<IActionResult> GetMySales(
-    CancellationToken ct)
+    public async Task<IActionResult> GetMySales(CancellationToken ct, [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10
+   )
     {
         var result = await mediator.Send(
-            new GetMySalesQuery(),
+            new GetMySalesQuery(page, pageSize),
             ct);
 
 

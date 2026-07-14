@@ -16,19 +16,23 @@ namespace RS.Application.Common.Interfaces
 
         Task<User?> GetByResetTokenAsync(string token, CancellationToken ct = default);
 
-        Task<IReadOnlyList<User>> GetUsersAsync(
+        Task<PaginatedResult<User>> GetUsersAsync(
         UserRole? role,
         UserStatus? status,
         string? search,
+        int page,
+        int pageSize,
         CancellationToken ct = default);
 
         Task<User?> GetByIdWithDetailsAsync(
             Guid id,
             CancellationToken ct = default);
 
-        Task<IReadOnlyCollection<User>> GetSalesByManagerAsync(
-        Guid managerId,
-        CancellationToken ct = default);
+        Task<PaginatedResult<User>> GetSalesByManagerAsync(
+     Guid managerId,
+     int page,
+     int pageSize,
+     CancellationToken ct = default);
 
         Task<User?> GetSalesByManagerAndIdAsync(
             Guid managerId,

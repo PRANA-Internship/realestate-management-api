@@ -6,7 +6,7 @@ using RS.Domain.Common;
 namespace RS.Application.Features.Users.Queries.GetUsers;
 
 public class GetUsersQueryHandler
-    : IRequestHandler<GetUsersQuery, Result<IReadOnlyCollection<UserResponse>>>
+    : IRequestHandler<GetUsersQuery, Result<PaginatedResult<UserResponse>>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IUserContext _userContext;
@@ -21,7 +21,7 @@ public class GetUsersQueryHandler
     }
 
 
-    public async Task<Result<IReadOnlyCollection<UserResponse>>> Handle(
+    public async Task<Result<PaginatedResult<UserResponse>>> Handle(
         GetUsersQuery request,
         CancellationToken ct)
     {
@@ -29,7 +29,7 @@ public class GetUsersQueryHandler
         // Only ADMIN can manage users
         if (_userContext.Role != Domain.Enums.UserRole.ADMIN)
         {
-            return Result<IReadOnlyCollection<UserResponse>>
+            return Result<PaginatedResult<UserResponse>>
                 .Failure(
                     new Error(
                         "FORBIDDEN",
@@ -41,10 +41,12 @@ public class GetUsersQueryHandler
             request.Role,
             request.Status,
             request.Search,
+            request.Page,
+            request.PageSize,
             ct);
 
 
-        var response = users
+        var response = users.Data
             .Select(x => new UserResponse(
                 x.Id,
                 x.FullName,
@@ -56,7 +58,7 @@ public class GetUsersQueryHandler
             .ToList();
 
 
-        return Result<IReadOnlyCollection<UserResponse>>
-            .Success(response);
+        return Result<PaginatedResult<UserResponse>>
+            .Success(new PaginatedResult<UserResponse>(response, users.Meta));
     }
 }
