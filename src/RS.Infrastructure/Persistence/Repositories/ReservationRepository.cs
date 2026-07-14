@@ -113,10 +113,9 @@ public class ReservationRepository(RSDbContext dbContext)
         var query = dbContext.Reservations.Include(x => x.Property)
             .Where(x => x.Property.CreatedByUserId == managerId).AsQueryable();
 
-        if (status.HasValue)
+        if (status is ReservationStatus statusValue)
         {
-
-            query = query.Where(x => x.Status == status.Value);
+            query = query.Where(x => x.Status == statusValue);
         }
 
         if (!string.IsNullOrWhiteSpace(search))
