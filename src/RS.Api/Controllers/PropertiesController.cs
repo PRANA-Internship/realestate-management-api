@@ -58,7 +58,8 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return NotFound(result.Error);
     }
-    [HasPermission(Permission.PropertyCreate)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
+
     [HttpPost]
     public async Task<IActionResult> Create([FromForm] CreatePropertyCommand command, CancellationToken ct)
     {
@@ -70,7 +71,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(new { Error = result.Error });
     }
 
-    [HasPermission(Permission.PropertyRead)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] GetPropertiesQuery query,
@@ -83,8 +84,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return BadRequest(result.Error);
     }
-
-    [HasPermission(Permission.PropertyReadMy)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpGet("my")]
     public async Task<IActionResult> GetMyProperties(
         [FromQuery] GetMyPropertiesQuery query,
@@ -98,7 +98,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [HasPermission(Permission.PropertyRead)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(
         Guid id,
@@ -112,7 +112,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return NotFound(result.Error);
     }
 
-    [HasPermission(Permission.PropertyUpdate)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpPut]
     public async Task<IActionResult> Update(
 
@@ -133,8 +133,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
     }
 
-
-    [HasPermission(Permission.PropertyDelete)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(
     Guid id,
@@ -153,7 +152,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
     }
 
 
-    [HasPermission(Permission.PropertyImageAdd)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpPost("/images")]
     public async Task<IActionResult> AddImages(
 
@@ -172,7 +171,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [HasPermission(Permission.PropertyImageDelete)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpDelete("images/{imageId:guid}")]
     public async Task<IActionResult> DeleteImage(
         Guid imageId,
@@ -189,7 +188,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return BadRequest(result.Error);
     }
-    [HasPermission(Permission.PropertyImageSetPrimary)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpPatch("images/{imageId:guid}/primary")]
     public async Task<IActionResult> SetPrimaryImage(
         Guid imageId,
@@ -206,7 +205,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return BadRequest(result.Error);
     }
-    [HasPermission(Permission.PropertyActiveStateChange)]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpPatch("/active")]
     public async Task<IActionResult> ChangeActiveState(
 
