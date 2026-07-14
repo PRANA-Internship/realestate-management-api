@@ -1,4 +1,5 @@
 using RS.Domain.Entities;
+using RS.Domain.Enums;
 
 namespace RS.Application.Common.Interfaces;
 
@@ -37,4 +38,11 @@ public interface IReservationRepository
     Task<IReadOnlyList<Reservation>> GetAllReservationAsync(
     Guid managerId,
     CancellationToken ct);
+
+    Task<PaginatedResult<Reservation>> GetManagedPropertyReservationsAsync(Guid managerId,
+        ReservationStatus? status,
+        string? search,
+        int page,
+        int pageSize,
+        CancellationToken ct = default);
 }
