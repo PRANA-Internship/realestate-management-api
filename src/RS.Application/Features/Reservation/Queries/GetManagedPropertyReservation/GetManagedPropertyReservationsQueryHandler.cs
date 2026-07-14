@@ -26,11 +26,7 @@ public class GetManagedPropertyReservationsQueryHandler
         GetManagedPropertyReservationsQuery request,
         CancellationToken ct)
     {
-        if (_userContext.Role != UserRole.MANAGER)
-        {
-            return Result<PaginatedResult<ManagedPropertyReservationResponse>>.Failure(
-                new Error("FORBIDDEN", "Only managers can access these reservations."));
-        }
+
 
         var reservations = await _reservationRepository
             .GetManagedPropertyReservationsAsync(
