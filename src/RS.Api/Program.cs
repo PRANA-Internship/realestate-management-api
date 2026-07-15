@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using RS.Api.Extensions;
+using RS.Api.Hubs;
+using RS.Api.Services;
 using RS.API.Middleware;
 
 using RS.Application.Common.Interfaces;
@@ -61,6 +63,10 @@ builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 builder.Services.AddHostedService<ReservationExpirationService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddSignalR();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "RS API", Version = "v1" });
@@ -155,5 +161,7 @@ app.UseRateLimiter();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<NotificationHub>(
+    "/hubs/notifications");
 
 app.Run();
