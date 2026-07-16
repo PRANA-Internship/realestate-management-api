@@ -76,10 +76,20 @@ namespace RS.Domain.Entities
             UpdatedAt = DateTimeOffset.UtcNow;
         }
 
-        public void UpdateProfileSafe(string fullName, string phone)
+        public void UpdateProfileSafe(
+       string? fullName,
+       string? phone)
         {
-            FullName = fullName.Trim();
-            Phone = phone.Trim();
+            if (!string.IsNullOrWhiteSpace(fullName))
+            {
+                FullName = fullName.Trim();
+            }
+
+            if (!string.IsNullOrWhiteSpace(phone))
+            {
+                Phone = phone.Trim();
+            }
+
             UpdatedAt = DateTimeOffset.UtcNow;
         }
 
@@ -95,6 +105,15 @@ namespace RS.Domain.Entities
         public void SetStatus(UserStatus status)
         {
             Status = status;
+            UpdatedAt = DateTimeOffset.UtcNow;
+        }
+
+
+        public void ChangePassword(string passwordHash)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(passwordHash);
+
+            PasswordHash = passwordHash;
             UpdatedAt = DateTimeOffset.UtcNow;
         }
     }
