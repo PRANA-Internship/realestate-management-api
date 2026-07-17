@@ -58,16 +58,19 @@ public class ReservationExpirationService : BackgroundService
             {
                 await unitOfWork.SaveChangesAsync(stoppingToken);
 
-                foreach (var reservation in expiredReservations.Where(x => x.BuyerUserId != null))
+                foreach (var item in expiredReservations
+                .Where(x => x.BuyerUserId.HasValue)
+                            .Select(x => new
+                            {
+                                Reservation = x,
+                                BuyerUserId = x.BuyerUserId!.Value
+                            }))
                 {
-                    if (reservation.BuyerUserId is Guid buyerUserId)
-                    {
-                        await notificationService.NotifyAsync(
-                            buyerUserId,
-                            "Reservation Expired",
-                            $"Your reservation for '{reservation.Property.Title}' has expired.",
-                            stoppingToken);
-                    }
+                    await notificationService.NotifyAsync(
+                        item.BuyerUserId,
+                        "Reservation Expired",
+                        $"Your reservation for '{item.Reservation.Property.Title}' has expired.",
+                        stoppingToken);
                 }
 
             }
