@@ -255,4 +255,18 @@ public class PropertyRepository : IPropertyRepository
                 pageSize,
                 totalItems));
     }
+
+    public async Task<int> CountAsync(PropertyStatus? status, CancellationToken ct = default)
+    {
+        var query = _dbContext.Properties.AsQueryable();
+        if (status is not null)
+        {
+
+            query = query.Where(x => x.Status == status);
+
+        }
+
+        return await query.CountAsync(ct);
+
+    }
 }

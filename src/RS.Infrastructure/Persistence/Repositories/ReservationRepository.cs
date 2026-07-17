@@ -139,4 +139,19 @@ public class ReservationRepository(RSDbContext dbContext)
 
 
     }
+
+    public async Task<int> CountAsync(ReservationStatus? status = null, CancellationToken ct = default)
+    {
+
+        var query = dbContext.Reservations.AsQueryable();
+
+        if (status is not null)
+        {
+
+            query = query.Where(x => x.Status == status);
+        }
+
+        return await query.CountAsync(ct);
+
+    }
 }
