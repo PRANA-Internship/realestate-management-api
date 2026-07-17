@@ -11,17 +11,21 @@ public class ChangePasswordCommandHandler
     private readonly IUserContext _userContext;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly INotificationService _notificationService;
+
 
     public ChangePasswordCommandHandler(
         IUserRepository userRepository,
         IUserContext userContext,
         IPasswordHasher passwordHasher,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        INotificationService notficationService)
     {
         _userRepository = userRepository;
         _userContext = userContext;
         _passwordHasher = passwordHasher;
         _unitOfWork = unitOfWork;
+        _notificationService = notficationService;
     }
 
 
@@ -75,6 +79,10 @@ public class ChangePasswordCommandHandler
         await _userRepository.UpdateAsync(user, ct);
         await _unitOfWork.SaveChangesAsync(ct);
 
+        await _notificationService.NotifyAsync(_userContext.UserId,
+            "Password Change",
+            "Change Password Successfull",
+            ct);
 
         return Result.Success();
     }

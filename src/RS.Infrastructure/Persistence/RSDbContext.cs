@@ -18,6 +18,7 @@ namespace RS.Infrastructure.Persistence
 
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
+        public DbSet<Notification> Notifications => Set<Notification>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(RSDbContext).Assembly);
@@ -36,6 +37,9 @@ namespace RS.Infrastructure.Persistence
     .WithOne(i => i.Property)
     .HasForeignKey(i => i.PropertyId)
     .OnDelete(DeleteBehavior.Cascade);
+
+
+
 
         }
 
