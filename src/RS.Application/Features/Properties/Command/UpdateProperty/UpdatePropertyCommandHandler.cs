@@ -11,15 +11,17 @@ public class UpdatePropertyCommandHandler
     private readonly IPropertyRepository _propertyRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
-
+    private readonly INotificationService _notificationService;
     public UpdatePropertyCommandHandler(
         IPropertyRepository propertyRepository,
         IUnitOfWork unitOfWork,
-        IUserContext userContext)
+        IUserContext userContext,
+        INotificationService notificationService)
     {
         _propertyRepository = propertyRepository;
         _unitOfWork = unitOfWork;
         _userContext = userContext;
+        _notificationService = notificationService;
     }
 
     public async Task<Result> Handle(
@@ -51,7 +53,9 @@ public class UpdatePropertyCommandHandler
         property.UpdatedAt = DateTime.UtcNow;
 
         await _unitOfWork.SaveChangesAsync(ct);
-
+        await _notificationService.NotifyAsync(_userContext.UserId,
+            "Property Update",
+            "Property Update Successfull", ct);
         return Result.Success();
     }
 }

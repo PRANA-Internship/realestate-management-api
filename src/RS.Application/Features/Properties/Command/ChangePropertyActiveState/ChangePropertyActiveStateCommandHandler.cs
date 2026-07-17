@@ -10,15 +10,18 @@ public class ChangePropertyActiveStateCommandHandler
     private readonly IPropertyRepository _propertyRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IUserContext _userContext;
+    private readonly INotificationService _notificationService;
 
     public ChangePropertyActiveStateCommandHandler(
         IPropertyRepository propertyRepository,
         IUnitOfWork unitOfWork,
-        IUserContext userContext)
+        IUserContext userContext,
+        INotificationService notificationService)
     {
         _propertyRepository = propertyRepository;
         _unitOfWork = unitOfWork;
         _userContext = userContext;
+        _notificationService = notificationService;
     }
 
     public async Task<Result> Handle(
@@ -41,6 +44,10 @@ public class ChangePropertyActiveStateCommandHandler
 
         await _unitOfWork.SaveChangesAsync(ct);
 
+        await _notificationService.NotifyAsync(_userContext.UserId,
+            "Property Status Change",
+            $"{property.Title} status changed to {request.IsActive}"
+            , ct);
         return Result.Success();
     }
 }

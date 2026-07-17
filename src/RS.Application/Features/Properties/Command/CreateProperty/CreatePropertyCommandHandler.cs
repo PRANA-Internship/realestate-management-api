@@ -20,19 +20,21 @@ public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyComman
     private readonly IUserContext _userContext;
     private readonly IStorageService _storageService;
     private readonly ILogger<CreatePropertyCommandHandler> _logger;
-
+    private readonly INotificationService _notificationService;
     public CreatePropertyCommandHandler(
         IUnitOfWork unitOfWork,
         IPropertyRepository propertyRepository,
         IUserContext userContext,
         IStorageService storageService,
-        ILogger<CreatePropertyCommandHandler> logger)
+        ILogger<CreatePropertyCommandHandler> logger,
+        INotificationService notificationService)
     {
         _unitOfWork = unitOfWork;
         _propertyRepository = propertyRepository;
         _userContext = userContext;
         _storageService = storageService;
         _logger = logger;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<Guid>> Handle(CreatePropertyCommand request, CancellationToken ct)
@@ -91,6 +93,10 @@ public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyComman
             await _propertyRepository.AddAsync(property, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 
+            await _notificationService.NotifyAsync(_userContext.UserId,
+                "Property Creation",
+                $"{property.Title} Created Successfully",
+                ct);
             return Result<Guid>.Success(property.Id);
         }
         catch

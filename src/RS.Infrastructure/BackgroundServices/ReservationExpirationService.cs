@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RS.Application.Common.Interfaces;
+using RS.Domain.Entities;
 using RS.Domain.Enums;
 
 namespace RS.Infrastructure.Services;
@@ -35,6 +36,7 @@ public class ReservationExpirationService : BackgroundService
                 await configurationService.GetIntAsync(
                     "Reservation.ExpirationCheckIntervalSeconds",
                     stoppingToken);
+            var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
 
             if (intervalSeconds <= 0)
             {
@@ -55,6 +57,22 @@ public class ReservationExpirationService : BackgroundService
             if (expiredReservations.Count > 0)
             {
                 await unitOfWork.SaveChangesAsync(stoppingToken);
+
+                foreach (var item in expiredReservations
+                .Where(x => x.BuyerUserId.HasValue)
+                            .Select(x => new
+                            {
+                                Reservation = x,
+                                BuyerUserId = x.BuyerUserId!.Value
+                            }))
+                {
+                    await notificationService.NotifyAsync(
+                        item.BuyerUserId,
+                        "Reservation Expired",
+                        $"Your reservation for '{item.Reservation.Property.Title}' has expired.",
+                        stoppingToken);
+                }
+
             }
 
             await Task.Delay(
