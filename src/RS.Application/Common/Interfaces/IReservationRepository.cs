@@ -45,4 +45,6 @@ public interface IReservationRepository
         int page,
         int pageSize,
         CancellationToken ct = default);
+
+    Task<int> CountAsync(ReservationStatus? status = null, CancellationToken ct = default);
 }
