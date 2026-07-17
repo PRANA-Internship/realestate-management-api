@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +13,8 @@ using RS.Api.Extensions;
 using RS.Api.Hubs;
 using RS.Api.Services;
 using RS.API.Middleware;
-
 using RS.Application.Common.Interfaces;
+using RS.Infrastructure.Authentication;
 using RS.Infrastructure.Persistence;
 using RS.Infrastructure.Persistence.Repositories;
 using RS.Infrastructure.Services;
@@ -62,6 +63,9 @@ builder.Services.AddHttpClient<IStorageService, SupabaseStorageService>();
 builder.Services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
 builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IPermissionProvider, DbPermissionProvider>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 builder.Services.AddHostedService<ReservationExpirationService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<INotificationSender, SignalRNotificationSender>();
@@ -131,6 +135,7 @@ using (var scope = app.Services.CreateScope())
 
         await ConfigurationSeeder.SeedAsync(dbContext);
 
+        await PermissionSeeder.SeedAsync(dbContext);
         logger.LogInformation("Database migration completed successfully!");
     }
     catch (Exception ex)

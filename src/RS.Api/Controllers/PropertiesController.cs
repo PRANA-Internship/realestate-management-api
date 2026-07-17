@@ -17,15 +17,14 @@ using RS.Application.Features.Properties.Queries.GetProperties;
 using RS.Application.Features.Properties.Queries.GetPropertyById;
 using RS.Application.Features.Properties.Queries.GetPublicProperties;
 using RS.Application.Features.Properties.Queries.GetPublicPropertyById;
-
+using RS.Domain.Enums;
+using RS.Infrastructure.Authentication;
 namespace RS.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 public class PropertiesController(IMediator mediator) : ControllerBase
 {
-
-
     [AllowAnonymous]
     [HttpGet("public")]
     public async Task<IActionResult> GetPublicProperties(
@@ -59,7 +58,8 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return NotFound(result.Error);
     }
-    [Authorize(Roles = "ADMIN,MANAGER")]
+    [Authorize(Roles = "MANAGER,ADMIN")]
+
     [HttpPost]
     public async Task<IActionResult> Create([FromForm] CreatePropertyCommand command, CancellationToken ct)
     {
@@ -71,7 +71,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(new { Error = result.Error });
     }
 
-    [Authorize(Roles = "ADMIN")]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] GetPropertiesQuery query,
@@ -84,7 +84,6 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return BadRequest(result.Error);
     }
-
     [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpGet("my")]
     public async Task<IActionResult> GetMyProperties(
@@ -99,7 +98,7 @@ public class PropertiesController(IMediator mediator) : ControllerBase
         return BadRequest(result.Error);
     }
 
-    [Authorize(Roles = "ADMIN,MANAGER")]
+    [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(
         Guid id,
@@ -133,7 +132,6 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
 
     }
-
 
     [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpDelete("{id:guid}")]
@@ -190,7 +188,6 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return BadRequest(result.Error);
     }
-
     [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpPatch("images/{imageId:guid}/primary")]
     public async Task<IActionResult> SetPrimaryImage(
@@ -208,7 +205,6 @@ public class PropertiesController(IMediator mediator) : ControllerBase
 
         return BadRequest(result.Error);
     }
-
     [Authorize(Roles = "MANAGER,ADMIN")]
     [HttpPatch("/active")]
     public async Task<IActionResult> ChangeActiveState(
