@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using MediatR;
 using RS.Application.Common.Interfaces;
 using RS.Domain.Common;
@@ -12,16 +13,19 @@ public class UpdateMySalesStatusCommandHandler
     private readonly IUserRepository _userRepository;
     private readonly IUserContext _userContext;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly INotificationService _notificationService;
 
 
     public UpdateMySalesStatusCommandHandler(
         IUserRepository userRepository,
         IUserContext userContext,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        INotificationService notificationSeervice)
     {
         _userRepository = userRepository;
         _userContext = userContext;
         _unitOfWork = unitOfWork;
+        _notificationService = notificationSeervice;
     }
 
 
@@ -69,7 +73,10 @@ public class UpdateMySalesStatusCommandHandler
 
         await _unitOfWork.SaveChangesAsync(ct);
 
-
+        await _notificationService.NotifyAsync(_userContext.UserId,
+            "Status Update",
+            $"{sales.FullName} status updated to {request.Status}",
+            ct);
 
         return Result.Success();
     }

@@ -15,6 +15,7 @@ public class CreateReservationCommandHandler
     private readonly IUserContext _userContext;
     private readonly IUserRepository _userRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly INotificationService _notificationService;
 
     public CreateReservationCommandHandler(
         IReservationRepository reservationRepository,
@@ -22,7 +23,8 @@ public class CreateReservationCommandHandler
         IConfigurationService configurationService,
         IUserContext userContext,
         IUserRepository userRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        INotificationService notificationService)
     {
         _reservationRepository = reservationRepository;
         _propertyRepository = propertyRepository;
@@ -30,6 +32,7 @@ public class CreateReservationCommandHandler
         _userContext = userContext;
         _userRepository = userRepository;
         _unitOfWork = unitOfWork;
+        _notificationService = notificationService;
     }
 
     public async Task<Result<Guid>> Handle(
@@ -160,6 +163,12 @@ public class CreateReservationCommandHandler
 
         await _reservationRepository.AddAsync(reservation, ct);
         await _unitOfWork.SaveChangesAsync(ct);
+
+        await _notificationService.NotifyAsync(
+             property.CreatedByUserId,
+                     "New Reservation",
+             $"A buyer reserved {property.Title}.",
+                                            ct);
 
         return Result<Guid>.Success(reservation.Id);
     }
