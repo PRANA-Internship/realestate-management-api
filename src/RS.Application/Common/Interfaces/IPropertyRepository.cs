@@ -1,4 +1,5 @@
 using RS.Domain.Entities;
+using RS.Domain.Enums;
 
 namespace RS.Application.Common.Interfaces;
 
@@ -59,4 +60,6 @@ public interface IPropertyRepository
     int page,
     int pageSize,
     CancellationToken ct);
+
+    Task<int> CountAsync(PropertyStatus? status = null, CancellationToken ct = default);
 }

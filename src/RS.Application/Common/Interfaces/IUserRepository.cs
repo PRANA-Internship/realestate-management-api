@@ -39,6 +39,8 @@ namespace RS.Application.Common.Interfaces
             Guid salesId,
             CancellationToken ct = default);
 
+        Task<int> CountAsync(UserRole? role = null,
+            CancellationToken ct = default);
 
     }
 }

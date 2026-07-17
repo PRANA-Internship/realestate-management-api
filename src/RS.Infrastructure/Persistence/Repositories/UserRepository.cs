@@ -137,5 +137,18 @@ namespace RS.Infrastructure.Persistence.Repositories
                         x.CreatedByUserId == managerId,
                     ct);
         }
+
+        public async Task<int> CountAsync(UserRole? role = null, CancellationToken ct = default)
+        {
+
+
+            var query = dbContext.Users.AsQueryable();
+            if (role is not null)
+            {
+                query = query.Where(x => x.Role == role);
+            }
+
+            return await query.CountAsync(ct);
+        }
     }
 }
