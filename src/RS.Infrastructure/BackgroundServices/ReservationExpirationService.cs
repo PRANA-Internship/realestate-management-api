@@ -58,7 +58,7 @@ public class ReservationExpirationService : BackgroundService
             {
                 await unitOfWork.SaveChangesAsync(stoppingToken);
 
-                foreach (var reservation in expiredReservations)
+                foreach (var reservation in expiredReservations.Where(x => x.BuyerUserId != null))
                 {
                     if (reservation.BuyerUserId is Guid buyerUserId)
                     {
